@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Day3_1
 {
@@ -26,19 +27,18 @@ namespace Day3_1
             string[] inputWire1 = input[0].Split(',');
             string[] inputWire2 = input[1].Split(',');
 
-            pos[,] grid = new pos[10000, 10000];
+            pos[,] grid = new pos[50000, 50000];
 
             coord turtle = new coord();
 
-            turtle.x = 5000;
-            turtle.y = 5000;
-
+            turtle.x = 25000;
+            turtle.y = 25000;
             for (int i = 0; i < inputWire1.Length; i++)
             {
-                string direction = inputWire1[i].Substring(1, 1);
-                int distance = Convert.ToInt32(inputWire1[i].Substring(1));
+                string direction = inputWire1[i].Substring(0, 1);
+                int d = Convert.ToInt32(inputWire1[i].Substring(1));
 
-                for (int j = 0; j < distance; j++)
+                for (int j = 0; j < d; j++)
                 {
                     switch (direction)
                     {
@@ -66,12 +66,15 @@ namespace Day3_1
                 }
             }
 
+
+            turtle.x = 25000;
+            turtle.y = 25000;
             for (int i = 0; i < inputWire2.Length; i++)
             {
-                string direction = inputWire2[i].Substring(1, 1);
-                int distance = Convert.ToInt32(inputWire1[i].Substring(1));
+                string direction = inputWire2[i].Substring(0, 1);
+                int d = Convert.ToInt32(inputWire2[i].Substring(1));
 
-                for (int j = 0; j < distance; j++)
+                for (int j = 0; j < d; j++)
                 {
                     switch (direction)
                     {
@@ -101,9 +104,9 @@ namespace Day3_1
 
 
             List<coord> intersections = new List<coord>();
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 50000; i++)
             {
-                for (int j = 0; j < 10000; j++)
+                for (int j = 0; j < 50000; j++)
                 {
                     if (grid[i,j].wire1 == true && grid[i,j].wire2 == true)
                     {
@@ -115,8 +118,11 @@ namespace Day3_1
             List<int> distance = new List<int>();
             foreach (var item in intersections)
             {
-
+                distance.Add(Math.Abs(25000 - item.x) + Math.Abs(25000 - item.y));
             }
+
+            var x = distance.Min();
+
 
 
         }
