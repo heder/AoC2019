@@ -29,15 +29,15 @@ namespace Day3_1
             string[] inputWire1 = input[0].Split(',');
             string[] inputWire2 = input[1].Split(',');
 
-            pos[,] grid = new pos[50000, 50000];
+            pos[,] grid = new pos[40000, 40000];
 
             coord turtle = new coord();
 
             int totalw1steps = 0;
             int totalw2steps = 0;
 
-            turtle.x = 25000;
-            turtle.y = 25000;
+            turtle.x = 20000;
+            turtle.y = 20000;
             for (int i = 0; i < inputWire1.Length; i++)
             {
                 string direction = inputWire1[i].Substring(0, 1);
@@ -67,13 +67,19 @@ namespace Day3_1
                             break;
                     }
 
+                    totalw1steps++;
                     grid[turtle.x, turtle.y].wire1 = true;
+
+                    if (grid[turtle.x, turtle.y].wire1dist == 0)
+                    {
+                        grid[turtle.x, turtle.y].wire1dist = totalw1steps;
+                    }
                 }
             }
 
 
-            turtle.x = 25000;
-            turtle.y = 25000;
+            turtle.x = 20000;
+            turtle.y = 20000;
             for (int i = 0; i < inputWire2.Length; i++)
             {
                 string direction = inputWire2[i].Substring(0, 1);
@@ -103,30 +109,38 @@ namespace Day3_1
                             break;
                     }
 
+                    totalw2steps++;
                     grid[turtle.x, turtle.y].wire2 = true;
+
+                    if (grid[turtle.x, turtle.y].wire2dist == 0)
+                    {
+                        grid[turtle.x, turtle.y].wire2dist = totalw2steps;
+                    }
                 }
             }
 
 
             List<coord> intersections = new List<coord>();
-            for (int i = 0; i < 50000; i++)
+            List<int> intersectiondist = new List<int>();
+            for (int i = 0; i < 40000; i++)
             {
-                for (int j = 0; j < 50000; j++)
+                for (int j = 0; j < 40000; j++)
                 {
                     if (grid[i, j].wire1 == true && grid[i, j].wire2 == true)
                     {
                         intersections.Add(new coord() { x = i, y = j });
+                        intersectiondist.Add(grid[i, j].wire1dist + grid[i, j].wire2dist);
                     }
                 }
             }
 
-            List<int> distance = new List<int>();
-            foreach (var item in intersections)
-            {
-                distance.Add(Math.Abs(25000 - item.x) + Math.Abs(25000 - item.y));
-            }
+            //List<int> distance = new List<int>();
+            //foreach (var item in intersections)
+            //{
+            //    distance.Add(Math.Abs(25000 - item.x) + Math.Abs(25000 - item.y));
+            //}
 
-            var x = distance.Min();
+            var x = intersectiondist.Min();
 
 
 
