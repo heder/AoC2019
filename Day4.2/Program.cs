@@ -14,7 +14,7 @@ namespace Day4._2
 
             bool adjacent;
             bool falling;
-            int numberFound = 0;
+            int count = 0;
 
             for (int i = from; i <= to; i++)
             {
@@ -25,53 +25,23 @@ namespace Day4._2
 
                 for (int j = 0; j < 5; j++)
                 {
-                    //digits[0] = 1;
-                    //digits[1] = 2;
-                    //digits[2] = 3;
-                    //digits[3] = 4;
-                    //digits[4] = 4;
-                    //digits[5] = 4;
-
-                    if (digits[j] == digits[j + 1])
+                    if (adjacent == false) // Single 2-group already found
                     {
-                        adjacent = true;
+                        if (digits[j] == digits[j + 1])
+                        {
+                            adjacent = true;
+                        }
+
+                        if (j < 4 && digits[j] == digits[j + 2])
+                        {
+                            adjacent = false;
+                        }
+
+                        if (j > 0 && digits[j] == digits[j - 1])
+                        {
+                            adjacent = false;
+                        }
                     }
-
-                    if (j < 4 && digits[j] == digits[j + 2])
-                    {
-                        adjacent = false;
-                    }
-
-                    if (j > 0 && digits[j] == digits[j - 1])
-                    {
-                        adjacent = false;
-                    }
-
-                    //int groupsize = 0;
-
-                    //// Check group size
-                    //for (int k = j; k < 6; k++)
-                    //{
-                    //    if (digits[k] == digits[j])
-                    //    {
-                    //        groupsize++;
-                    //    }
-                    //}
-
-                    //// Ugly left check
-                    //if (j > 0 && groupsize == 2 && digits[j - 1] == digits[j])
-                    //{
-                    //    adjacent = false;
-                    //}
-                    //else if (groupsize > 2)
-                    //{
-                    //    adjacent = false;
-                    //} 
-                    //else
-                    //{
-                    //    adjacent = true;
-                    //}
-                    //}
 
                     if (digits[j + 1] < digits[j])
                     {
@@ -81,11 +51,11 @@ namespace Day4._2
 
                 if (adjacent == true && falling == true)
                 {
-                    numberFound++;
+                    count++;
                 }
             }
 
-            Console.WriteLine(numberFound);
+            Console.WriteLine(count);
             Console.ReadKey();
         }
     }
