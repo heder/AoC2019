@@ -25,8 +25,6 @@ namespace Day4._1
 
                 for (int j = 0; j < 5; j++)
                 {
-                    //var x = digits.GroupBy(f => f);
-
                     if (digits[j] == digits[j + 1])
                     {
                         adjacent = true;
