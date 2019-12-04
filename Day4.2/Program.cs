@@ -37,12 +37,12 @@ namespace Day4._2
                         adjacent = true;
                     }
 
-                    if (j < 4 && digits[j] != digits[j + 2])
+                    if (j < 4 && digits[j] == digits[j + 2])
                     {
                         adjacent = false;
                     }
 
-                    if (j > 0 && digits[j] != digits[j - 1])
+                    if (j > 0 && digits[j] == digits[j - 1])
                     {
                         adjacent = false;
                     }
