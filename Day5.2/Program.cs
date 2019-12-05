@@ -9,7 +9,7 @@ namespace Day5_2
         {
             string[] input = File.ReadAllLines("in.txt")[0].Split(',');
 
-            int[] ram = new int[input.Length];
+            int[] ram = new int[20000];
             for (int i = 0; i < input.Length; i++)
             {
                 ram[i] = Convert.ToInt32(input[i]);
@@ -20,8 +20,9 @@ namespace Day5_2
             int p1mode;
             int p2mode;
             int p3mode;
-            int p1val = 0;
-            int p2val = 0;
+            int p1addr;
+            int p2addr;
+            int p3addr;
 
             while (ram[pc] != 99)
             {
@@ -32,90 +33,77 @@ namespace Day5_2
                 p2mode = Convert.ToInt32(instruction.Substring(1, 1));
                 p3mode = Convert.ToInt32(instruction.Substring(0, 1));
 
-                //if (opcode == 1 || opcode == 2 || opcode == 3 || opcode == 4)
-                //{
-                //    p1val = (p1mode == 0) ? ram[ram[pc + 1]] : ram[pc + 1];
-                //}
-
-                if (opcode == 1 || opcode == 2 || opcode == 5 || opcode == 6 || opcode == 7 || opcode == 8)
-                {
-                    p1val = (p1mode == 0) ? ram[ram[pc + 1]] : ram[pc + 1];
-                    p2val = (p2mode == 0) ? ram[ram[pc + 2]] : ram[pc + 2];
-                }
-
-                if (opcode == 3 || opcode == 4)
-                {
-                    p1val = ram[pc + 1]; //(p1mode == 0) ? ram[ram[pc + 1]] : ram[pc + 1];
-                }
-
+                p1addr = (p1mode == 0) ? ram[pc + 1] : pc + 1;
+                p2addr = (p2mode == 0) ? ram[pc + 2] : pc + 2;
+                p3addr = (p3mode == 0) ? ram[pc + 3] : pc + 3;
 
                 switch (opcode)
                 {
                     case 1:
-                        ram[ram[pc + 3]] = p1val + p2val;
+                        ram[p3addr] = ram[p1addr] + ram[p2addr];
                         pc += 4;
                         break;
 
                     case 2:
-                        ram[ram[pc + 3]] = p1val * p2val;
+                        ram[p3addr] = ram[p1addr] * ram[p2addr];
                         pc += 4;
                         break;
 
                     case 3:
                         Console.Write($"Input at pc {pc}:");
                         int val = Convert.ToInt32(Console.ReadLine());
-                        ram[p1val] = val;
+                        ram[p1addr] = val;
                         pc += 2;
                         break;
 
                     case 4:
-                        Console.Write($"Output at pc {pc}:{ram[p1val]}");
+                        Console.Write($"Output at pc {pc}:{ram[p1addr]}");
                         Console.WriteLine("");
                         pc += 2;
                         break;
 
                     case 5:
-                        if (p1val != 0)
+                        if (ram[p1addr] != 0)
                         {
-                            pc = p2val;
+                            pc = ram[p2addr];
                         }
                         else
                         {
-                            pc += 4;
+                            pc += 3;
                         }
                         break;
 
                     case 6:
-                        if (p1val == 0)
+                        if (ram[p1addr] == 0)
                         {
-                            pc = p2val;
+                            pc = ram[p2addr];
                         }
                         else
                         {
-                            pc += 4;
+                            pc += 3;
                         }
                         break;
 
                     case 7:
-                        if (p1val < p2val)
+                        if (ram[p1addr] < ram[p2addr])
                         {
-                            ram[ram[pc + 3]] = 1;
+                            ram[p3addr] = 1;
                         }
                         else
                         {
-                            ram[ram[pc + 3]] = 0;
+                            ram[p3addr] = 0;
                         }
                         pc += 4;
                         break;
 
                     case 8:
-                        if (p1val == p2val)
+                        if (ram[p1addr] == ram[p2addr])
                         {
-                            ram[ram[pc + 3]] = 1;
+                            ram[p3addr] = 1;
                         }
                         else
                         {
-                            ram[ram[pc + 3]] = 0;
+                            ram[p3addr] = 0;
                         }
                         pc += 4;
                         break;
@@ -125,11 +113,8 @@ namespace Day5_2
                         Console.ReadKey();
                         break;
                 }
-
-
             }
 
-            //Console.WriteLine(ram[0]);
             Console.ReadKey();
         }
     }
