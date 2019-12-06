@@ -11,6 +11,7 @@ namespace Day6_1
         {
             public string Name { get; set; }
             public CelestialObject Orbits { get; set; }
+            public CelestialObject OrbitedBy { get; set; }
         }
 
         
@@ -45,6 +46,10 @@ namespace Day6_1
                 {
                     bExists.Orbits = aExists;
                 }
+
+                aExists.OrbitedBy = bExists;
+
+
             }
 
             int totalOrbits = 0;
