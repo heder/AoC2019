@@ -5,23 +5,11 @@ using System.Linq;
 
 namespace Day6_2
 {
-    // https://www.koderdojo.com/blog/breadth-first-search-and-shortest-path-in-csharp-and-net-core
-
     class Program
     {
-        //class CelestialObject
-        //{
-        //    public string Name { get; set; }
-        //    public CelestialObject Orbits { get; set; }
-        //    public CelestialObject OrbitedBy { get; set; }
-        //}
-
-
         static void Main(string[] args)
         {
-            //List<CelestialObject> objectList = new List<CelestialObject>();
-
-            string[] input = File.ReadAllLines("in.txt"); //[0].Split(',');
+            string[] input = File.ReadAllLines("in.txt");
 
             List<string> vertices = new List<string>();
             List<Tuple<string, string>> edges = new List<Tuple<string, string>>();
@@ -43,78 +31,19 @@ namespace Day6_2
             }
 
             var graph = new Graph<string>(vertices, edges);
-
             var algorithms = new Algorithms();
 
             var shortestPath = algorithms.ShortestPathFunction<string>(graph,  "YOU");
 
-            //foreach (var vertex in vertices)
-
             var y = shortestPath("SAN");
-
-            //Console.WriteLine("shortest path to {0,2}: {1}, {2}", 
-            //    "SAN", string.Join(", ", shortestPath("SAN")), );
-
             Console.WriteLine(y.Count() - 3);
 
             Console.ReadKey();
-
-
-            //foreach (var item in input)
-            //{
-            //    var x = item.Split(')');
-
-            //    var a = x[0];
-            //    var b = x[1];
-
-            //    var aExists = objectList.FirstOrDefault(f => f.Name == a);
-            //    var bExists = objectList.FirstOrDefault(f => f.Name == b);
-
-            //    if (aExists == null)
-            //    {
-            //        aExists = new CelestialObject() { Name = a };
-            //        objectList.Add(aExists);
-            //    }
-
-            //    if (bExists == null)
-            //    {
-            //        objectList.Add(new CelestialObject() { Name = b, Orbits = aExists });
-            //    }
-            //    else
-            //    {
-            //        bExists.Orbits = aExists;
-            //    }
-
-            //    aExists.OrbitedBy = bExists;
-
-
-            //}
-
-            //int totalOrbits = 0;
-            //foreach (var item in objectList)
-            //{
-            //    var start = item;
-
-            //    while (start.Orbits != null)
-            //    {
-            //        totalOrbits++;
-            //        start = start.Orbits;
-            //    }
-
-            //}
-
-            //Console.WriteLine($"Total orbits: {totalOrbits}");
-            //Console.ReadKey();
-
         }
-
-
-
-
     }
 
-    // BFS non weighted graph search
 
+    // BFS non weighted graph search
     public class Graph<T>
     {
         public Graph() { }
@@ -214,5 +143,4 @@ namespace Day6_2
             return shortestPath;
         }
     }
-
 }

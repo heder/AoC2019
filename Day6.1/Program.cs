@@ -67,7 +67,6 @@ namespace Day6_1
 
             Console.WriteLine($"Total orbits: {totalOrbits}");
             Console.ReadKey();
-
         }
     }
 }
