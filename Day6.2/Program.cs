@@ -23,7 +23,8 @@ namespace Day6_2
 
             string[] input = File.ReadAllLines("in.txt"); //[0].Split(',');
 
-            var g = new Graph<string>();
+            List<string> vertices = new List<string>();
+            List<Tuple<string, string>> edges = new List<Tuple<string, string>>();
 
             foreach (var item in input)
             {
@@ -32,19 +33,31 @@ namespace Day6_2
                 var a = x[0];
                 var b = x[1];
 
-                g.AddVertex(a);
-                g.AddVertex(b);
+                var aExists = vertices.FirstOrDefault(f => f == a);
+                var bExists = vertices.FirstOrDefault(f => f == b);
 
-                g.AddEdge(new Tuple<string, string>(b, a));
+                if (aExists == null) vertices.Add(a);
+                if (bExists == null) vertices.Add(b);
+
+                edges.Add(new Tuple<string, string>(a, b));
             }
+
+            var graph = new Graph<string>(vertices, edges);
 
             var algorithms = new Algorithms();
 
-            var startVertex = 1;
-            var shortestPath = algorithms.ShortestPathFunction(graph, startVertex);
-            foreach (var vertex in vertices)
-                Console.WriteLine("shortest path to {0,2}: {1}",
-                        vertex, string.Join(", ", shortestPath(vertex)));
+            var shortestPath = algorithms.ShortestPathFunction<string>(graph,  "YOU");
+
+            //foreach (var vertex in vertices)
+
+            var y = shortestPath("SAN");
+
+            //Console.WriteLine("shortest path to {0,2}: {1}, {2}", 
+            //    "SAN", string.Join(", ", shortestPath("SAN")), );
+
+            Console.WriteLine(y.Count() - 3);
+
+            Console.ReadKey();
 
 
             //foreach (var item in input)
@@ -77,66 +90,30 @@ namespace Day6_2
 
             //}
 
-            int totalOrbits = 0;
-            foreach (var item in objectList)
-            {
-                var start = item;
+            //int totalOrbits = 0;
+            //foreach (var item in objectList)
+            //{
+            //    var start = item;
 
-                while (start.Orbits != null)
-                {
-                    totalOrbits++;
-                    start = start.Orbits;
-                }
+            //    while (start.Orbits != null)
+            //    {
+            //        totalOrbits++;
+            //        start = start.Orbits;
+            //    }
 
-            }
+            //}
 
-            Console.WriteLine($"Total orbits: {totalOrbits}");
-            Console.ReadKey();
+            //Console.WriteLine($"Total orbits: {totalOrbits}");
+            //Console.ReadKey();
 
         }
 
 
 
 
-        public Func<T, IEnumerable<T>> ShortestPathFunction<T>(Graph<T> graph, T start)
-        {
-            var previous = new Dictionary<T, T>();
-
-            var queue = new Queue<T>();
-            queue.Enqueue(start);
-
-            while (queue.Count > 0)
-            {
-                var vertex = queue.Dequeue();
-                foreach (var neighbor in graph.AdjacencyList[vertex])
-                {
-                    if (previous.ContainsKey(neighbor))
-                        continue;
-
-                    previous[neighbor] = vertex;
-                    queue.Enqueue(neighbor);
-                }
-            }
-
-            Func<T, IEnumerable<T>> shortestPath = v => {
-                var path = new List<T> { };
-
-                var current = v;
-                while (!current.Equals(start))
-                {
-                    path.Add(current);
-                    current = previous[current];
-                };
-
-                path.Add(start);
-                path.Reverse();
-
-                return path;
-            };
-
-            return shortestPath;
-        }
     }
+
+    // BFS non weighted graph search
 
     public class Graph<T>
     {
@@ -194,6 +171,47 @@ namespace Day6_2
             }
 
             return visited;
+        }
+
+
+
+        public Func<T, IEnumerable<T>> ShortestPathFunction<T>(Graph<T> graph, T start)
+        {
+            var previous = new Dictionary<T, T>();
+
+            var queue = new Queue<T>();
+            queue.Enqueue(start);
+
+            while (queue.Count > 0)
+            {
+                var vertex = queue.Dequeue();
+                foreach (var neighbor in graph.AdjacencyList[vertex])
+                {
+                    if (previous.ContainsKey(neighbor))
+                        continue;
+
+                    previous[neighbor] = vertex;
+                    queue.Enqueue(neighbor);
+                }
+            }
+
+            Func<T, IEnumerable<T>> shortestPath = v => {
+                var path = new List<T> { };
+
+                var current = v;
+                while (!current.Equals(start))
+                {
+                    path.Add(current);
+                    current = previous[current];
+                };
+
+                path.Add(start);
+                path.Reverse();
+
+                return path;
+            };
+
+            return shortestPath;
         }
     }
 
