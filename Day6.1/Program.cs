@@ -43,7 +43,7 @@ namespace Day6_1
                 }
                 else
                 {
-                    bExists.Orbits = bExists;
+                    bExists.Orbits = aExists;
                 }
             }
 
