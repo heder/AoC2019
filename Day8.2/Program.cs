@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -54,6 +55,8 @@ namespace Day8_2
                 }
             }
 
+            Bitmap b = new Bitmap(25, 6);
+
             // Dump some ASCII-Art
             for (int i = 0; i < ROWS; i++)
             {
@@ -63,13 +66,16 @@ namespace Day8_2
                     {
                         case 0:
                             Console.Write(" ");
+                            b.SetPixel(j, i, Color.Transparent);
                             break;
 
                         case 1:
                             Console.Write("o");
+                            b.SetPixel(j, i, Color.Black);
                             break;
                         case 2:
                             Console.Write(".");
+                            b.SetPixel(j, i, Color.White);
                             break;
 
                         default:
@@ -79,6 +85,8 @@ namespace Day8_2
 
                 Console.Write(Environment.NewLine);
             }
+
+            b.Save("output.png", System.Drawing.Imaging.ImageFormat.Png);
 
             Console.ReadKey();
         }
