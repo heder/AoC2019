@@ -23,18 +23,6 @@ namespace Day9._1
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     public enum CpuState
     {
         INIT = 0,
@@ -112,7 +100,6 @@ namespace Day9._1
 
                     case 2:
                         p2addr = relativeBase + ram[pc + 2];
-                        //p2addr = relativeBase + ram[(pc + 2)];
                         break;
                 }
 
@@ -129,13 +116,9 @@ namespace Day9._1
 
                     case 2:
                         p3addr = relativeBase + ram[pc + 3];
-                        //p3addr = relativeBase + ram[(pc + 3)];
                         break;
                 }
 
-                //p1addr = (p1mode == 0) ? ram[pc + 1] : pc + 1;
-                //p2addr = (p2mode == 0) ? ram[pc + 2] : pc + 2;
-                //p3addr = (p3mode == 0) ? ram[pc + 3] : pc + 3;
 
                 switch (opcode)
                 {
