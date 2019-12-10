@@ -12,8 +12,17 @@ namespace Day10._1
     {
         class Asteroid
         {
+            public Asteroid()
+            {
+                CanSeeAsteroids = new List<Asteroid>();
+            }
+
             public PointF coord { get; set; }
             public int CanSee { get; set; }
+            
+            public List<Asteroid> CanSeeAsteroids { get; set; }
+
+            public double Angle { get; set; }
         }
 
         static void Main(string[] args)
@@ -36,8 +45,6 @@ namespace Day10._1
             }
 
 
-            List<Asteroid> blockingAsteroids = new List<Asteroid>();
-
             // Loop all asteroids
             foreach (var from in asteroids)
             {
@@ -47,16 +54,12 @@ namespace Day10._1
                 {
                     var blockers = asteroids.Except(new List<Asteroid>() { from, to });
 
-                    // Sort the blockers list according to distance, so that the blockingAsteroids list contains the closest ones.
-                    blockers.OrderBy(f => new Line2D(new Point2D(from.coord.X, from.coord.Y), new Point2D(f.coord.X, f.coord.Y)).Length);
-
                     bool blockerExists = false;
                     foreach (var blocker in blockers)
                     {
                         blockerExists = IsOnLine(from.coord, to.coord, blocker.coord);
                         if (blockerExists == true)
                         {
-                            blockingAsteroids.Add(blocker);
                             break;
                         }
                     }
@@ -64,45 +67,31 @@ namespace Day10._1
                     if (blockerExists == false)
                     {
                         from.CanSee++;
+                        from.CanSeeAsteroids.Add(to);
                     }
                 }
             }
 
             var max = asteroids.Max(f => f.CanSee);
-            var res = asteroids.Where(g => g.CanSee == max);
+            var res = asteroids.First(g => g.CanSee == max);
 
-
-            // Recall sorted blockers with angle.
-            // Loop all asteroids
-            var from = res.First();
-
-            // Loop all other asteroids
-            var others = asteroids.Except(new List<Asteroid>() { from });
-            foreach (var to in others)
+            // Calculate angle on all that can be seen.
+            foreach (var item in res.CanSeeAsteroids)
             {
-                var blockers = asteroids.Except(new List<Asteroid>() { from, to });
+                item.Angle = Math.Atan2(item.coord.X - res.coord.X, item.coord.Y - res.coord.Y) * 180d / Math.PI;
 
-                // Sort the blockers list according to distance, so that the blockingAsteroids list contains the closest ones.
-                blockers.OrderBy(f => new Line2D(new Point2D(from.coord.X, from.coord.Y), new Point2D(f.coord.X, f.coord.Y)).Length);
-
-                bool blockerExists = false;
-                foreach (var blocker in blockers)
+                if (item.Angle < 0)
                 {
-                    blockerExists = IsOnLine(from.coord, to.coord, blocker.coord);
-                    if (blockerExists == true)
-                    {
-                        blockingAsteroids.Add(blocker);
-                        break;
-                    }
-                }
-
-                if (blockerExists == false)
-                {
-                    from.CanSee++;
+                    item.Angle = 360 + item.Angle;
                 }
             }
-            
 
+            // Sort 
+            var xxx = res.CanSeeAsteroids.OrderBy(f => f.Angle);
+
+            var yyy = xxx.ElementAt(199);
+
+            var code = (yyy.coord.X * 100) + yyy.coord.Y;
         }
 
         static bool IsOnLine(PointF start, PointF end, PointF pt, double epsilon = 0.001)
