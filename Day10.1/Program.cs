@@ -72,28 +72,57 @@ namespace Day10._1
             var res = asteroids.Where(g => g.CanSee == max);
 
 
+            // Recall sorted blockers with angle.
+            // Loop all asteroids
+            var from = res.First();
 
-            static bool IsOnLine(PointF start, PointF end, PointF pt, double epsilon = 0.001)
+            // Loop all other asteroids
+            var others = asteroids.Except(new List<Asteroid>() { from });
+            foreach (var to in others)
             {
-                if (pt.X - Math.Max(start.X, end.X) > epsilon ||
-                    Math.Min(start.X, end.X) - pt.X > epsilon ||
-                    pt.Y - Math.Max(start.Y, end.Y) > epsilon ||
-                    Math.Min(start.Y, end.Y) - pt.Y > epsilon)
-                    return false;
+                var blockers = asteroids.Except(new List<Asteroid>() { from, to });
 
-                if (Math.Abs(end.X - start.X) < epsilon)
-                    return Math.Abs(start.X - pt.X) < epsilon || Math.Abs(end.X - pt.X) < epsilon;
-                if (Math.Abs(end.Y - start.Y) < epsilon)
-                    return Math.Abs(start.Y - pt.Y) < epsilon || Math.Abs(end.Y - pt.Y) < epsilon;
+                // Sort the blockers list according to distance, so that the blockingAsteroids list contains the closest ones.
+                blockers.OrderBy(f => new Line2D(new Point2D(from.coord.X, from.coord.Y), new Point2D(f.coord.X, f.coord.Y)).Length);
 
-                double x = start.X + (pt.Y - start.Y) * (end.X - start.X) / (end.Y - start.Y);
-                double y = start.Y + (pt.X - start.X) * (end.Y - start.Y) / (end.X - start.X);
+                bool blockerExists = false;
+                foreach (var blocker in blockers)
+                {
+                    blockerExists = IsOnLine(from.coord, to.coord, blocker.coord);
+                    if (blockerExists == true)
+                    {
+                        blockingAsteroids.Add(blocker);
+                        break;
+                    }
+                }
 
-                return Math.Abs(pt.X - x) < epsilon || Math.Abs(pt.Y - y) < epsilon;
+                if (blockerExists == false)
+                {
+                    from.CanSee++;
+                }
             }
+            
 
         }
 
+        static bool IsOnLine(PointF start, PointF end, PointF pt, double epsilon = 0.001)
+        {
+            if (pt.X - Math.Max(start.X, end.X) > epsilon ||
+                Math.Min(start.X, end.X) - pt.X > epsilon ||
+                pt.Y - Math.Max(start.Y, end.Y) > epsilon ||
+                Math.Min(start.Y, end.Y) - pt.Y > epsilon)
+                return false;
+
+            if (Math.Abs(end.X - start.X) < epsilon)
+                return Math.Abs(start.X - pt.X) < epsilon || Math.Abs(end.X - pt.X) < epsilon;
+            if (Math.Abs(end.Y - start.Y) < epsilon)
+                return Math.Abs(start.Y - pt.Y) < epsilon || Math.Abs(end.Y - pt.Y) < epsilon;
+
+            double x = start.X + (pt.Y - start.Y) * (end.X - start.X) / (end.Y - start.Y);
+            double y = start.Y + (pt.X - start.X) * (end.Y - start.Y) / (end.X - start.X);
+
+            return Math.Abs(pt.X - x) < epsilon || Math.Abs(pt.Y - y) < epsilon;
+        }
 
     }
 }
