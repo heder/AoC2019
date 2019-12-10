@@ -78,21 +78,62 @@ namespace Day10._1
             // Calculate angle on all that can be seen.
             foreach (var item in res.CanSeeAsteroids)
             {
-                item.Angle = Math.Atan2(item.coord.X - res.coord.X, item.coord.Y - res.coord.Y) * 180d / Math.PI;
+                float deltaX = item.coord.X - res.coord.X;
+                float deltaY = item.coord.Y - res.coord.Y;
 
-                if (item.Angle < 0)
-                {
-                    item.Angle = 360 + item.Angle;
-                }
+                item.Angle = Math.Atan2(Math.Abs(deltaY), Math.Abs(deltaX)) * 180d / Math.PI;
+
+ 
+
+
             }
 
             // Sort 
+
+            foreach (var item in res.CanSeeAsteroids)
+            {
+                item.Angle += 90;
+            }
+
+            foreach (var item in res.CanSeeAsteroids)
+            {
+                if (item.Angle >= 360)
+                {
+                    item.Angle -= 360;
+                }
+            }
+
             var xxx = res.CanSeeAsteroids.OrderBy(f => f.Angle);
 
             var yyy = xxx.ElementAt(199);
 
             var code = (yyy.coord.X * 100) + yyy.coord.Y;
         }
+
+
+
+        //static double VectorAngle(double x, double y)
+        //{
+        //    if (x == 0) // special cases
+        //        return (y > 0) ? 90
+        //            : (y == 0) ? 0
+        //            : 270;
+        //    else if (y == 0) // special cases
+        //        return (x >= 0) ? 0
+        //            : 180;
+
+        //    double ret = Math.Atan2(y , x) * 180d / Math.PI;
+
+        //    if (x < 0 && y < 0) // quadrant Ⅲ
+        //        ret = 180 + ret;
+        //    else if (x < 0) // quadrant Ⅱ
+        //        ret = 180 + ret; // it actually substracts
+        //    else if (y < 0) // quadrant Ⅳ
+        //        ret = 270 + (90 + ret); // it actually substracts
+
+        //    return ret;
+        //}
+
 
         static bool IsOnLine(PointF start, PointF end, PointF pt, double epsilon = 0.001)
         {
