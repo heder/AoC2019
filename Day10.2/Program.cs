@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 
-namespace Day10._1
+namespace Day10_2
 {
     class Program
     {
@@ -50,13 +50,12 @@ namespace Day10._1
                 var others = asteroids.Except(new List<Asteroid>() { from });
                 foreach (var to in others)
                 {
-                    var blockers = asteroids.Except(new List<Asteroid>() { from, to });
+                    var potentialBlockers = asteroids.Except(new List<Asteroid>() { from, to });
 
                     bool blockerExists = false;
-
-                    foreach (var blocker in blockers)
+                    foreach (var checkIfBlocks in potentialBlockers)
                     {
-                        blockerExists = IsOnLine(from.coord, to.coord, blocker.coord);
+                        blockerExists = IsOnLine(from.coord, to.coord, checkIfBlocks.coord);
                         if (blockerExists == true)
                         {
                             break;
@@ -70,6 +69,44 @@ namespace Day10._1
                     }
                 }
             }
+
+            var max = asteroids.Max(f => f.CanSee);
+            var res = asteroids.First(g => g.CanSee == max);
+
+            // Calculate angle on all that can be seen.
+            foreach (var item in res.CanSeeAsteroids)
+            {
+                float deltaX = item.coord.X - res.coord.X;
+                float deltaY = item.coord.Y - res.coord.Y;
+
+                if (deltaY < 0 && deltaX >= 0)
+                {
+                    item.Angle = Math.Atan2(Math.Abs(deltaX), Math.Abs(deltaY)) * 180d / Math.PI;
+                }
+                else if (deltaY >= 0 && deltaX > 0)
+                {
+                    item.Angle = Math.Atan2(Math.Abs(deltaY), Math.Abs(deltaX)) * 180d / Math.PI;
+                    item.Angle += 90;
+                }
+                else if (deltaY > 0 && deltaX <= 0)
+                {
+                    item.Angle = Math.Atan2(Math.Abs(deltaX), Math.Abs(deltaY)) * 180d / Math.PI;
+                    item.Angle += 180;
+                }
+                else if (deltaY <= 0 && deltaX <= 0)
+                {
+                    item.Angle = Math.Atan2(Math.Abs(deltaY), Math.Abs(deltaX)) * 180d / Math.PI;
+                    item.Angle += 270;
+                }
+            }
+
+            // Sort 
+
+            var xxx = res.CanSeeAsteroids.OrderBy(f => f.Angle);
+
+            var yyy = xxx.ElementAt(199);
+
+            var code = (yyy.coord.X * 100) + yyy.coord.Y;
         }
 
 
