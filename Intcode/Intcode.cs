@@ -47,10 +47,10 @@ namespace Intcode
             {
                 string instruction = ram[pc].ToString().PadLeft(5, '0');
 
-                opcode = Convert.ToInt32(instruction.Substring(3, 2));
-                p1mode = Convert.ToInt32(instruction.Substring(2, 1));
-                p2mode = Convert.ToInt32(instruction.Substring(1, 1));
-                p3mode = Convert.ToInt32(instruction.Substring(0, 1));
+                opcode = Convert.ToInt64(instruction.Substring(3, 2));
+                p1mode = Convert.ToInt64(instruction.Substring(2, 1));
+                p2mode = Convert.ToInt64(instruction.Substring(1, 1));
+                p3mode = Convert.ToInt64(instruction.Substring(0, 1));
 
                 switch (p1mode)
                 {
