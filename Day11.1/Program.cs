@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace Day11._1
 {
-
     enum Direction
     {
         UP = 0,
@@ -23,19 +22,12 @@ namespace Day11._1
 
         static void Main(string[] args)
         {
-            const int SIZE = 200;
+            const int SIZE = 100;
 
-            string[] input = File.ReadAllLines("in.txt")[0].Split(',');
-
-            long[] ram = new long[20000];
-            for (int i = 0; i < input.Length; i++)
-            {
-                ram[i] = Convert.ToInt64(input[i]);
-            }
+            long[] input = File.ReadAllLines("in.txt")[0].Split(',').Select(f => Convert.ToInt64(f)).ToArray();
 
             Pixel[,] grid = new Pixel[SIZE, SIZE];
-            Intcode.CPU cpu = new Intcode.CPU(ram);
-
+            Intcode.CPU cpu = new Intcode.CPU(input);
 
             int currentX = SIZE / 2;
             int currentY = SIZE / 2;
@@ -61,7 +53,6 @@ namespace Day11._1
                 cpu.Run(new long[0]);
 
                 // Output is turn
-
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {
                     if (cpu.Output == 0)
@@ -75,8 +66,6 @@ namespace Day11._1
                         {
                             currentDirection++;
                         }
-
-                        // Move forward and paint
                     }
                     if (cpu.Output == 1)
                     {
@@ -105,9 +94,6 @@ namespace Day11._1
                         case Direction.RIGHT:
                             currentY++;
                             break;
-
-                        //default:
-                        //    break;
                     }
 
                 }
@@ -118,7 +104,7 @@ namespace Day11._1
             {
                 for (int y = 0; y < SIZE; y++)
                 {
-                    switch (grid[x,y].Color)
+                    switch (grid[x, y].Color)
                     {
                         case 0:
                             Console.Write('.');
@@ -141,7 +127,7 @@ namespace Day11._1
                 Console.WriteLine("");
             }
 
-            Console.WriteLine("Painted {painted} tiles");
+            Console.WriteLine($"Painted {painted} tiles");
             Console.ReadKey();
         }
     }

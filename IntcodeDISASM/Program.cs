@@ -176,7 +176,7 @@ namespace IntcodeDISASM
 
 
                     case 9:
-                        disassembly += "CHBASE ";
+                        disassembly += "MOVEBASE ";
                         disassembly += p1mnemo;
                         disassembly += Environment.NewLine;
                         pc += 2;

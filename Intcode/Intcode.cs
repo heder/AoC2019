@@ -2,7 +2,6 @@
 
 namespace Intcode
 {
-
     public enum CpuState
     {
         INIT = 0,
@@ -13,35 +12,33 @@ namespace Intcode
 
     public class CPU
     {
-        public System.Int64 Output { get; set; }
+        public long Output { get; set; }
         public CpuState State { get; set; }
 
+        private long[] ram = new long[20000];
+        private long pc { get; set; }
+        private long relativeBase = 0;
 
-        public CPU(System.Int64[] ram_in)
+        public CPU(long[] ram_in)
         {
             ram_in.CopyTo(ram, 0);
             this.pc = 0;
             this.State = CpuState.INIT;
         }
 
-        private System.Int64[] ram = new System.Int64[20000];
-        public System.Int64 pc { get; set; }
-
-        System.Int64 relativeBase = 0;
-
-        public void Run(System.Int64[] input)
+        public void Run(long[] input)
         {
             this.State = CpuState.RUNNING;
 
-            System.Int64 opcode;
-            System.Int64 p1mode;
-            System.Int64 p2mode;
-            System.Int64 p3mode;
-            System.Int64 p1addr = 0;
-            System.Int64 p2addr = 0;
-            System.Int64 p3addr = 0;
+            long opcode = 0;
+            long p1mode = 0;
+            long p2mode = 0;
+            long p3mode = 0;
+            long p1addr = 0;
+            long p2addr = 0;
+            long p3addr = 0;
 
-            System.Int64 inputPos = 0;
+            long inputPos = 0;
 
             while (this.State == CpuState.RUNNING)
             {
@@ -102,33 +99,31 @@ namespace Intcode
 
                 switch (opcode)
                 {
-                    case 1:
+                    case 1: // ADD
                         ram[p3addr] = ram[p1addr] + ram[p2addr];
                         pc += 4;
                         break;
 
-                    case 2:
+                    case 2: // MUL
                         ram[p3addr] = ram[p1addr] * ram[p2addr];
                         pc += 4;
                         break;
 
-                    case 3:
+                    case 3: // INP
                         Console.WriteLine($"Input at pc {pc}:{input[inputPos]}");
-                        System.Int64 val = input[inputPos];
+                        ram[p1addr] = input[inputPos];
                         inputPos++;
-                        ram[p1addr] = val;
                         pc += 2;
                         break;
 
-                    case 4:
+                    case 4: // OUT
                         Console.WriteLine($"Output at pc {pc}:{ram[p1addr]}");
                         this.Output = ram[p1addr];
-                        Console.WriteLine(this.Output);
                         this.State = CpuState.OUTPUT_READY;
                         pc += 2;
                         break;
 
-                    case 5:
+                    case 5: // JMP if not Z
                         if (ram[p1addr] != 0)
                         {
                             pc = ram[p2addr];
@@ -139,7 +134,7 @@ namespace Intcode
                         }
                         break;
 
-                    case 6:
+                    case 6: // JMP if Z
                         if (ram[p1addr] == 0)
                         {
                             pc = ram[p2addr];
@@ -150,7 +145,7 @@ namespace Intcode
                         }
                         break;
 
-                    case 7:
+                    case 7: // IFLESS
                         if (ram[p1addr] < ram[p2addr])
                         {
                             ram[p3addr] = 1;
@@ -162,7 +157,7 @@ namespace Intcode
                         pc += 4;
                         break;
 
-                    case 8:
+                    case 8: // IFEQ
                         if (ram[p1addr] == ram[p2addr])
                         {
                             ram[p3addr] = 1;
@@ -175,7 +170,7 @@ namespace Intcode
                         break;
 
 
-                    case 9:
+                    case 9: // MOVEBASE
                         relativeBase += ram[p1addr];
                         pc += 2;
                         break;
