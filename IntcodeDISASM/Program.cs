@@ -59,7 +59,7 @@ namespace IntcodeDISASM
 
                     case 2:
                         // Relative
-                        p1mnemo = "%" + p1code;
+                        p1mnemo = "$(" + p1code + ")";
                         break;
                 }
 
@@ -78,7 +78,7 @@ namespace IntcodeDISASM
 
                     case 2:
                         // Relative
-                        p2mnemo = "%" + p2code;
+                        p2mnemo = "$(" + p2code + ")";
                         break;
                 }
 
@@ -97,7 +97,7 @@ namespace IntcodeDISASM
 
                     case 2:
                         // Relative
-                        p3mnemo = "%" + p3code;
+                        p3mnemo = "$(" + p3code + ")";
                         break;
                 }
 
