@@ -23,6 +23,7 @@ namespace Day11._1
 
         static void Main(string[] args)
         {
+            const int SIZE = 200;
 
             string[] input = File.ReadAllLines("in.txt")[0].Split(',');
 
@@ -32,12 +33,12 @@ namespace Day11._1
                 ram[i] = Convert.ToInt64(input[i]);
             }
 
-            Pixel[,] grid = new Pixel[10000, 10000];
+            Pixel[,] grid = new Pixel[SIZE, SIZE];
             Intcode.CPU cpu = new Intcode.CPU(ram);
 
 
-            int currentX = 5000;
-            int currentY = 5000;
+            int currentX = SIZE / 2;
+            int currentY = SIZE / 2;
             grid[currentX, currentY].Color = 1;
 
             Direction currentDirection = Direction.UP;
@@ -104,26 +105,27 @@ namespace Day11._1
                         case Direction.RIGHT:
                             currentY++;
                             break;
-                        default:
-                            break;
+
+                        //default:
+                        //    break;
                     }
 
                 }
             }
 
             int painted = 0;
-            for (int x = 0; x < 10000; x++)
+            for (int x = 0; x < SIZE; x++)
             {
-                for (int y = 0; y < 10000; y++)
+                for (int y = 0; y < SIZE; y++)
                 {
                     switch (grid[x,y].Color)
                     {
                         case 0:
-                            //Console.Write('.');
+                            Console.Write('.');
                             break;
 
                         case 1:
-                            //Console.Write('*');
+                            Console.Write('*');
                             break;
 
                         default:
@@ -136,7 +138,7 @@ namespace Day11._1
                     }
                 }
 
-                //Console.WriteLine("");
+                Console.WriteLine("");
             }
 
             Console.WriteLine("Painted {painted} tiles");

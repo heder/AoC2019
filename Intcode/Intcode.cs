@@ -27,6 +27,8 @@ namespace Intcode
         private System.Int64[] ram = new System.Int64[20000];
         public System.Int64 pc { get; set; }
 
+        System.Int64 relativeBase = 0;
+
         public void Run(System.Int64[] input)
         {
             this.State = CpuState.RUNNING;
@@ -40,8 +42,6 @@ namespace Intcode
             System.Int64 p3addr = 0;
 
             System.Int64 inputPos = 0;
-
-            System.Int64 relativeBase = 0;
 
             while (this.State == CpuState.RUNNING)
             {
