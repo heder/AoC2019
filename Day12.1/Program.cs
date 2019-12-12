@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -72,7 +73,8 @@ namespace Day12._1
 
             //ConcurrentDictionary<string, object> dict = new ConcurrentDictionary<string, object>();
 
-            Dictionary<int[], object> dict = new Dictionary<int[], object>();
+            //Dictionary<int[], object> dict = new Dictionary<int[], object>();
+            HashSet<int[]> dict = new HashSet<int[]>();
 
             
 
@@ -111,28 +113,29 @@ namespace Day12._1
 
             // Add init state
             //sb.Clear();
-            int zzz = 0;
-            b = new int[24];
-            foreach (var item in initialStates)
-            {
-                //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
-                b[zzz+0] = (int)item.Position.x;
-                b[zzz+1] = (int)item.Position.y;
-                b[zzz+2] = (int)item.Position.z;
-                b[zzz+3] = (int)item.Velocity.x;
-                b[zzz+4] = (int)item.Velocity.y;
-                b[zzz+5] = (int)item.Velocity.z;
+            //int zzz = 0;
+            //b = new int[24];
+            //foreach (var item in initialStates)
+            //{
+            //    //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
+            //    b[zzz+0] = (int)item.Position.x;
+            //    b[zzz+1] = (int)item.Position.y;
+            //    b[zzz+2] = (int)item.Position.z;
+            //    b[zzz+3] = (int)item.Velocity.x;
+            //    b[zzz+4] = (int)item.Velocity.y;
+            //    b[zzz+5] = (int)item.Velocity.z;
 
-                zzz+=6;
-            }
+            //    zzz+=6;
+            //}
 
-            dict.TryAdd(b, null);
+            //dict.Add(b);
 
-            string s = "";
+            Stopwatch sw = new Stopwatch();
 
+            sw.Start();
 
             //int checksum = 0;
-            for (long i = 0; i < 5000000000; i++)
+            for (long i = 0; i < 10000000; i++)
             {
                 //checksum = 0;
 
@@ -184,38 +187,41 @@ namespace Day12._1
                     //checksum += moons[b].Position.x + moons[b].Position.y + moons[b].Position.z + moons[b].Velocity.x + moons[b].Velocity.y + moons[b].Velocity.z;
                 }
 
-                // Calculate state
-                zzz = 0;
-                b = new int[24];
-                foreach (var item in initialStates)
-                {
-                    //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
-                    b[zzz + 0] = (int)item.Position.x;
-                    b[zzz + 1] = (int)item.Position.y;
-                    b[zzz + 2] = (int)item.Position.z;
-                    b[zzz + 3] = (int)item.Velocity.x;
-                    b[zzz + 4] = (int)item.Velocity.y;
-                    b[zzz + 5] = (int)item.Velocity.z;
+                //// Calculate state
+                //zzz = 0;
+                //b = new int[24];
+                //foreach (var item in initialStates)
+                //{
+                //    //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
+                //    b[zzz + 0] = (int)item.Position.x;
+                //    b[zzz + 1] = (int)item.Position.y;
+                //    b[zzz + 2] = (int)item.Position.z;
+                //    b[zzz + 3] = (int)item.Velocity.x;
+                //    b[zzz + 4] = (int)item.Velocity.y;
+                //    b[zzz + 5] = (int)item.Velocity.z;
 
-                    zzz+=6;
-                }
+                //    zzz+=6;
+                //}
 
-                if (dict.ContainsKey(b) == true)
-                {
-                        Console.WriteLine($"duplicate found @ iteration {i}");
-                        Console.ReadKey();
-                }
-                else
-                {
-                    dict.Add(b, null);
-                }
+                //if (dict.Contains(b) == true)
+                //{
+                //        Console.WriteLine($"duplicate found @ iteration {i}");
+                //        Console.ReadKey();
+                //}
+                //else
+                //{
+                //    dict.Add(b);
+                //}
 
-                if (i % 100000 == 0)
+                if (i % 1000000 == 0)
                 {
                     Console.WriteLine(i);
                 }
             }
 
+            sw.Stop();
+            Console.WriteLine("Elapsed 10000000:" + sw.ElapsedMilliseconds + " ms.");
+            Console.ReadKey();
 
 
             int kinetic = 0;
