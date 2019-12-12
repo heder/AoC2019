@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -6,40 +7,16 @@ namespace Day12._1
 {
     class Point3D
     {
-        public Point3D()
-        {
-            x = 0;
-            y = 0;
-            z = 0;
-        }
-
         public int x { get; set; }
         public int y { get; set; }
         public int z { get; set; }
-
-        public override string ToString()
-        {
-            return $"x:{x}, y{y}, z{z}";
-        }
     }
 
     class Vector3D
     {
-        public Vector3D()
-        {
-            x = 0;
-            y = 0;
-            z = 0;
-        }
-
         public int x { get; set; }
         public int y { get; set; }
         public int z { get; set; }
-
-        public override string ToString()
-        {
-            return $"x:{x}, y{y}, z{z}";
-        }
     }
 
     class Moon
@@ -51,11 +28,10 @@ namespace Day12._1
 
     class Program
     {
-
         static void Main(string[] args)
         {
             Moon[] moons = new Moon[4];
- 
+
             string[] input = File.ReadAllLines("in.txt");
 
             for (int i = 0; i < input.Length; i++)
@@ -78,20 +54,30 @@ namespace Day12._1
                 }
             }
 
-            for (long i = 0; i < 1500; i++)
+            Console.WriteLine($"After 0 steps");
+            foreach (var item in moons)
             {
-                Console.WriteLine($"After {i} steps");
-                foreach (var item in moons)
-                {
-                    Console.WriteLine($"Pos: {item.Position.ToString()}, Velocity: {item.Velocity.ToString()}");
-                }
+                Console.WriteLine($"Pos: {item.Position.ToString()}, Velocity: {item.Velocity.ToString()}");
+            }
 
-                if (i == 1000)
+            int xcycle = 0;
+            int ycycle = 0;
+            int zcycle = 0;
+
+            HashSet<(int, int, int, int, int, int, int, int)> states = new HashSet<(int, int, int, int, int, int, int, int)>();
+
+            for (int i = 0; i < 100000000; i++)
+            {
+                if (states.Contains((moons[0].Position.x, moons[1].Position.x, moons[2].Position.x, moons[3].Position.x, moons[0].Velocity.x, moons[1].Velocity.x, moons[2].Velocity.x, moons[3].Velocity.x)) == false)
                 {
+                    states.Add((moons[0].Position.x, moons[1].Position.x, moons[2].Position.x, moons[3].Position.x, moons[0].Velocity.x, moons[1].Velocity.x, moons[2].Velocity.x, moons[3].Velocity.x));
+                }
+                else
+                {
+                    xcycle = i;
                     break;
                 }
 
-                // Find pairs to compare and adjust velocity
                 foreach (var item in moonPairs)
                 {
                     if (moons[item.Item1].Position.x < moons[item.Item2].Position.x)
@@ -104,7 +90,29 @@ namespace Day12._1
                         moons[item.Item1].Velocity.x--;
                         moons[item.Item2].Velocity.x++;
                     }
+                }
 
+                for (int bbb = 0; bbb < moons.Length; bbb++)
+                {
+                    moons[bbb].Position.x += moons[bbb].Velocity.x;
+                }
+            }
+
+            states.Clear();
+            for (int i = 0; i < 100000000; i++)
+            {
+                if (states.Contains((moons[0].Position.y, moons[1].Position.y, moons[2].Position.y, moons[3].Position.y, moons[0].Velocity.y, moons[1].Velocity.y, moons[2].Velocity.y, moons[3].Velocity.y)) == false)
+                {
+                    states.Add((moons[0].Position.y, moons[1].Position.y, moons[2].Position.y, moons[3].Position.y, moons[0].Velocity.y, moons[1].Velocity.y, moons[2].Velocity.y, moons[3].Velocity.y));
+                }
+                else
+                {
+                    ycycle = i;
+                    break;
+                }
+
+                foreach (var item in moonPairs)
+                {
                     if (moons[item.Item1].Position.y < moons[item.Item2].Position.y)
                     {
                         moons[item.Item1].Velocity.y++;
@@ -115,7 +123,29 @@ namespace Day12._1
                         moons[item.Item1].Velocity.y--;
                         moons[item.Item2].Velocity.y++;
                     }
+                }
 
+                for (int bbb = 0; bbb < moons.Length; bbb++)
+                {
+                    moons[bbb].Position.y += moons[bbb].Velocity.y;
+                }
+            }
+
+            states.Clear();
+            for (int i = 0; i < 100000000; i++)
+            {
+                if (states.Contains((moons[0].Position.z, moons[1].Position.z, moons[2].Position.z, moons[3].Position.z, moons[0].Velocity.z, moons[1].Velocity.z, moons[2].Velocity.z, moons[3].Velocity.z)) == false)
+                {
+                    states.Add((moons[0].Position.z, moons[1].Position.z, moons[2].Position.z, moons[3].Position.z, moons[0].Velocity.z, moons[1].Velocity.z, moons[2].Velocity.z, moons[3].Velocity.z));
+                }
+                else
+                {
+                    zcycle = i;
+                    break;
+                }
+
+                foreach (var item in moonPairs)
+                {
                     if (moons[item.Item1].Position.z < moons[item.Item2].Position.z)
                     {
                         moons[item.Item1].Velocity.z++;
@@ -126,26 +156,16 @@ namespace Day12._1
                         moons[item.Item1].Velocity.z--;
                         moons[item.Item2].Velocity.z++;
                     }
-
                 }
 
-                // Use velocity to adjust position
                 for (int bbb = 0; bbb < moons.Length; bbb++)
                 {
-                    moons[bbb].Position.x += moons[bbb].Velocity.x;
-                    moons[bbb].Position.y += moons[bbb].Velocity.y;
                     moons[bbb].Position.z += moons[bbb].Velocity.z;
                 }
             }
 
-            int kinetic = 0;
-            // Calc result
-            foreach (var item in moons)
-            {
-                kinetic += (Math.Abs(item.Position.x) + Math.Abs(item.Position.y) + Math.Abs(item.Position.z)) * (Math.Abs(item.Velocity.x) + Math.Abs(item.Velocity.y) + Math.Abs(item.Velocity.z));
-            }
-
-            Console.WriteLine(kinetic);
+            var cycle = Euclid.LeastCommonMultiple(new long[3] { xcycle , ycycle , zcycle});
+            Console.WriteLine($"cycle: {cycle}");
             Console.ReadKey();
         }
     }
