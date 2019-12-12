@@ -64,7 +64,7 @@ namespace Day12._1
 
         static void Main(string[] args)
         {
-            //StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
             int[] b;
 
@@ -73,9 +73,9 @@ namespace Day12._1
 
             //ConcurrentDictionary<string, object> dict = new ConcurrentDictionary<string, object>();
 
-            //Dictionary<int[], object> dict = new Dictionary<int[], object>();
-            HashSet<int[]> dict = new HashSet<int[]>();
-
+            //Dictionary<string, object> dict = new Dictionary<string, object>();
+            
+            //HashSet<string> dict = new HashSet<string>();   
             
 
             string[] input = File.ReadAllLines("in.txt"); //.Split(',').Select(f => Convert.ToInt64(f)).ToArray();
@@ -111,28 +111,42 @@ namespace Day12._1
             }
 
 
+            //var f = System.IO.File.OpenWrite("dump.txt");
+
+            StreamWriter sw = new StreamWriter("out.txt");
+
+            //string slask = "";
             // Add init state
-            //sb.Clear();
+            sb.Clear();
+
+            sb.Append("0,");
             //int zzz = 0;
             //b = new int[24];
-            //foreach (var item in initialStates)
-            //{
-            //    //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
-            //    b[zzz+0] = (int)item.Position.x;
-            //    b[zzz+1] = (int)item.Position.y;
-            //    b[zzz+2] = (int)item.Position.z;
-            //    b[zzz+3] = (int)item.Velocity.x;
-            //    b[zzz+4] = (int)item.Velocity.y;
-            //    b[zzz+5] = (int)item.Velocity.z;
+            foreach (var item in initialStates)
+            {
+                //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
+                sb.Append(item.Position.x);
+                sb.Append('|');
+                sb.Append(item.Position.y);
+                sb.Append('|');
+                sb.Append(item.Position.z);
+                sb.Append('|');
+                sb.Append(item.Velocity.x);
+                sb.Append('|');
+                sb.Append(item.Velocity.y);
+                sb.Append('|');
+                sb.Append(item.Velocity.z);
+            }
 
-            //    zzz+=6;
-            //}
+            //dict.Add(sb.ToString());
 
-            //dict.Add(b);
+            sw.WriteLine(sb.ToString());
 
-            Stopwatch sw = new Stopwatch();
+            Stopwatch swp = new Stopwatch();
 
-            sw.Start();
+            swp.Start();
+
+            
 
             //int checksum = 0;
             for (long i = 0; i < 10000000; i++)
@@ -187,30 +201,37 @@ namespace Day12._1
                     //checksum += moons[b].Position.x + moons[b].Position.y + moons[b].Position.z + moons[b].Velocity.x + moons[b].Velocity.y + moons[b].Velocity.z;
                 }
 
-                //// Calculate state
-                //zzz = 0;
-                //b = new int[24];
-                //foreach (var item in initialStates)
-                //{
-                //    //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
-                //    b[zzz + 0] = (int)item.Position.x;
-                //    b[zzz + 1] = (int)item.Position.y;
-                //    b[zzz + 2] = (int)item.Position.z;
-                //    b[zzz + 3] = (int)item.Velocity.x;
-                //    b[zzz + 4] = (int)item.Velocity.y;
-                //    b[zzz + 5] = (int)item.Velocity.z;
+                // Calculate state
+                sb.Clear();
+                sb.Append($"{i + 1},");
+                foreach (var item in moons)
+                {
+                    //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
+                    sb.Append(item.Position.x);
+                    sb.Append('|');
+                    sb.Append(item.Position.y);
+                    sb.Append('|');
+                    sb.Append(item.Position.z);
+                    sb.Append('|');
+                    sb.Append(item.Velocity.x);
+                    sb.Append('|');
+                    sb.Append(item.Velocity.y);
+                    sb.Append('|');
+                    sb.Append(item.Velocity.z);
+                }
 
-                //    zzz+=6;
-                //}
+                sw.WriteLine(sb.ToString());
 
-                //if (dict.Contains(b) == true)
+                //slask = sb.ToString();
+
+                //if (dict.Contains(slask) == true)
                 //{
-                //        Console.WriteLine($"duplicate found @ iteration {i}");
-                //        Console.ReadKey();
+                //    Console.WriteLine($"duplicate found @ iteration {i}");
+                //    Console.ReadKey();
                 //}
                 //else
                 //{
-                //    dict.Add(b);
+                //    dict.Add(slask);
                 //}
 
                 if (i % 1000000 == 0)
@@ -219,8 +240,8 @@ namespace Day12._1
                 }
             }
 
-            sw.Stop();
-            Console.WriteLine("Elapsed 10000000:" + sw.ElapsedMilliseconds + " ms.");
+            swp.Stop();
+            Console.WriteLine("Elapsed 10000000:" + swp.ElapsedMilliseconds + " ms.");
             Console.ReadKey();
 
 
