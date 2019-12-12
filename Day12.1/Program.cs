@@ -78,7 +78,7 @@ namespace Day12._1
             int initialchecksum = 0;
             foreach (var item in initialStates)
             {
-                initialchecksum += item.Position.x + item.Position.y + item.Position.z;
+                initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
             }
 
 
@@ -87,7 +87,7 @@ namespace Day12._1
 
             for (int i = 0; i < moons.Length; i++)
             {
-                for (int j = i; j < moons.Length; j++)
+                for (int j = i + 1; j < moons.Length; j++)
                 {
                     moonPairs.Add(new Tuple<int, int>(i, j));
                 }
@@ -102,6 +102,8 @@ namespace Day12._1
             int checksum = 0;
             for (long i = 0; i < 5000000000; i++)
             {
+                checksum = 0;
+
                 // Find pairs to compare and adjust velocity
                 foreach (var item in moonPairs)
                 {
@@ -147,60 +149,60 @@ namespace Day12._1
                     moons[b].Position.y += moons[b].Velocity.y;
                     moons[b].Position.z += moons[b].Velocity.z;
 
-                    checksum += moons[b].Position.x + moons[b].Position.y + moons[b].Position.z;
+                    //checksum += moons[b].Position.x + moons[b].Position.y + moons[b].Position.z + moons[b].Velocity.x + moons[b].Velocity.y + moons[b].Velocity.z;
                 }
 
 
 
 
-                //Console.WriteLine($"After {i + 1} steps");
-                //foreach (var item in moons)
-                //{
-                //    Console.WriteLine($"Pos: {item.Position.ToString()}, Velocity: {item.Velocity.ToString()}");
-                //}
+                Console.WriteLine($"After {i + 1} steps");
+                foreach (var item in moons)
+                {
+                    Console.WriteLine($"Pos: {item.Position.ToString()}, Velocity: {item.Velocity.ToString()}");
+                }
 
                 // Check states only if sum of all moons is same
 
-                if (checksum == initialchecksum)
-                {
+                //if (checksum == initialchecksum)
+                //{
 
-                    for (int x = 0; x < 4; x++)
-                    {
-                        if (moons[x].Position.x != initialStates[x].Position.x)
-                        {
-                            break;
-                        }
-                        if (moons[x].Position.y != initialStates[x].Position.y)
-                        {
-                            break;
-                        }
-                        if (moons[x].Position.z != initialStates[x].Position.z)
-                        {
-                            break;
-                        }
-                        if (moons[x].Velocity.x != initialStates[x].Velocity.x)
-                        {
-                            break;
-                        }
-                        if (moons[x].Velocity.y != initialStates[x].Velocity.y)
-                        {
-                            break;
-                        }
-                        if (moons[x].Velocity.z != initialStates[x].Velocity.z)
-                        {
-                            break;
-                        }
+                //    for (int x = 0; x < 4; x++)
+                //    {
+                //        if (moons[x].Position.x != initialStates[x].Position.x)
+                //        {
+                //            break;
+                //        }
+                //        if (moons[x].Position.y != initialStates[x].Position.y)
+                //        {
+                //            break;
+                //        }
+                //        if (moons[x].Position.z != initialStates[x].Position.z)
+                //        {
+                //            break;
+                //        }
+                //        if (moons[x].Velocity.x != initialStates[x].Velocity.x)
+                //        {
+                //            break;
+                //        }
+                //        if (moons[x].Velocity.y != initialStates[x].Velocity.y)
+                //        {
+                //            break;
+                //        }
+                //        if (moons[x].Velocity.z != initialStates[x].Velocity.z)
+                //        {
+                //            break;
+                //        }
 
-                        if (x == 3)
-                        {
-                            // If we get here, the states are the same
-                            Console.WriteLine($"State found after {i} iterations");
-                            Console.ReadKey();
-                        }
-                    }
-                }
+                //        if (x == 3)
+                //        {
+                //            // If we get here, the states are the same
+                //            Console.WriteLine($"State found after {i} iterations");
+                //            Console.ReadKey();
+                //        }
+                //    }
+                //}
 
-                if (i % 1000000 == 0)
+                if (i % 100 == 0)
                 {
                     Console.WriteLine(i);
                 }
