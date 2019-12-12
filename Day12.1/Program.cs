@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Day12._1
 {
@@ -56,10 +58,23 @@ namespace Day12._1
 
     class Program
     {
+
+        
+
         static void Main(string[] args)
         {
+            //StringBuilder sb = new StringBuilder();
+
+            int[] b;
+
             Moon[] moons = new Moon[4];
             Moon[] initialStates = new Moon[4];
+
+            //ConcurrentDictionary<string, object> dict = new ConcurrentDictionary<string, object>();
+
+            Dictionary<int[], object> dict = new Dictionary<int[], object>();
+
+            
 
             string[] input = File.ReadAllLines("in.txt"); //.Split(',').Select(f => Convert.ToInt64(f)).ToArray();
 
@@ -73,12 +88,6 @@ namespace Day12._1
 
                 moons[i] = new Moon() { Position = new Point3D() { x = x, y = y, z = z }, Velocity = new Vector3D() };
                 initialStates[i] = new Moon() { Position = new Point3D() { x = x, y = y, z = z }, Velocity = new Vector3D() };
-            }
-
-            int initialchecksum = 0;
-            foreach (var item in initialStates)
-            {
-                initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
             }
 
 
@@ -99,10 +108,33 @@ namespace Day12._1
                 Console.WriteLine($"Pos: {item.Position.ToString()}, Velocity: {item.Velocity.ToString()}");
             }
 
-            int checksum = 0;
+
+            // Add init state
+            //sb.Clear();
+            int zzz = 0;
+            b = new int[24];
+            foreach (var item in initialStates)
+            {
+                //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
+                b[zzz+0] = (int)item.Position.x;
+                b[zzz+1] = (int)item.Position.y;
+                b[zzz+2] = (int)item.Position.z;
+                b[zzz+3] = (int)item.Velocity.x;
+                b[zzz+4] = (int)item.Velocity.y;
+                b[zzz+5] = (int)item.Velocity.z;
+
+                zzz+=6;
+            }
+
+            dict.TryAdd(b, null);
+
+            string s = "";
+
+
+            //int checksum = 0;
             for (long i = 0; i < 5000000000; i++)
             {
-                checksum = 0;
+                //checksum = 0;
 
                 // Find pairs to compare and adjust velocity
                 foreach (var item in moonPairs)
@@ -143,71 +175,45 @@ namespace Day12._1
                 }
 
                 // Use velocity to adjust position
-                for (int b = 0; b < moons.Length; b++)
+                for (int bbb = 0; bbb < moons.Length; bbb++)
                 {
-                    moons[b].Position.x += moons[b].Velocity.x;
-                    moons[b].Position.y += moons[b].Velocity.y;
-                    moons[b].Position.z += moons[b].Velocity.z;
+                    moons[bbb].Position.x += moons[bbb].Velocity.x;
+                    moons[bbb].Position.y += moons[bbb].Velocity.y;
+                    moons[bbb].Position.z += moons[bbb].Velocity.z;
 
                     //checksum += moons[b].Position.x + moons[b].Position.y + moons[b].Position.z + moons[b].Velocity.x + moons[b].Velocity.y + moons[b].Velocity.z;
                 }
 
-
-
-
-                Console.WriteLine($"After {i + 1} steps");
-                foreach (var item in moons)
+                // Calculate state
+                zzz = 0;
+                b = new int[24];
+                foreach (var item in initialStates)
                 {
-                    Console.WriteLine($"Pos: {item.Position.ToString()}, Velocity: {item.Velocity.ToString()}");
+                    //initialchecksum += item.Position.x + item.Position.y + item.Position.z + item.Velocity.x + item.Velocity.y + item.Velocity.z;
+                    b[zzz + 0] = (int)item.Position.x;
+                    b[zzz + 1] = (int)item.Position.y;
+                    b[zzz + 2] = (int)item.Position.z;
+                    b[zzz + 3] = (int)item.Velocity.x;
+                    b[zzz + 4] = (int)item.Velocity.y;
+                    b[zzz + 5] = (int)item.Velocity.z;
+
+                    zzz+=6;
                 }
 
-                // Check states only if sum of all moons is same
+                if (dict.ContainsKey(b) == true)
+                {
+                        Console.WriteLine($"duplicate found @ iteration {i}");
+                        Console.ReadKey();
+                }
+                else
+                {
+                    dict.Add(b, null);
+                }
 
-                //if (checksum == initialchecksum)
-                //{
-
-                //    for (int x = 0; x < 4; x++)
-                //    {
-                //        if (moons[x].Position.x != initialStates[x].Position.x)
-                //        {
-                //            break;
-                //        }
-                //        if (moons[x].Position.y != initialStates[x].Position.y)
-                //        {
-                //            break;
-                //        }
-                //        if (moons[x].Position.z != initialStates[x].Position.z)
-                //        {
-                //            break;
-                //        }
-                //        if (moons[x].Velocity.x != initialStates[x].Velocity.x)
-                //        {
-                //            break;
-                //        }
-                //        if (moons[x].Velocity.y != initialStates[x].Velocity.y)
-                //        {
-                //            break;
-                //        }
-                //        if (moons[x].Velocity.z != initialStates[x].Velocity.z)
-                //        {
-                //            break;
-                //        }
-
-                //        if (x == 3)
-                //        {
-                //            // If we get here, the states are the same
-                //            Console.WriteLine($"State found after {i} iterations");
-                //            Console.ReadKey();
-                //        }
-                //    }
-                //}
-
-                if (i % 100 == 0)
+                if (i % 100000 == 0)
                 {
                     Console.WriteLine(i);
                 }
-
-
             }
 
 
