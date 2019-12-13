@@ -110,14 +110,14 @@ namespace Intcode
                         break;
 
                     case 3: // INP
-                        Console.WriteLine($"Input at pc {pc}:{input[inputPos]}");
+                        //Console.WriteLine($"Input at pc {pc}:{input[inputPos]}");
                         ram[p1addr] = input[inputPos];
                         inputPos++;
                         pc += 2;
                         break;
 
                     case 4: // OUT
-                        Console.WriteLine($"Output at pc {pc}:{ram[p1addr]}");
+                        //Console.WriteLine($"Output at pc {pc}:{ram[p1addr]}");
                         this.Output = ram[p1addr];
                         this.State = CpuState.OUTPUT_READY;
                         pc += 2;

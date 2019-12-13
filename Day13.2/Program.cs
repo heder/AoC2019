@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -10,7 +11,7 @@ namespace Day13._1
         {
             long[] input = File.ReadAllLines("in.txt")[0].Split(',').Select(f => Convert.ToInt64(f)).ToArray();
 
-            const int SIZE = 100;
+            const int SIZE = 50;
 
             int[,] grid = new int[SIZE, SIZE];
 
@@ -19,26 +20,33 @@ namespace Day13._1
 
             int score = 0;
 
+            int iterations = 0;
             while (cpu.State != Intcode.CpuState.STOPPED)
             {
                 int x = 0;
                 int y = 0;
                 int c = 0;
 
-                var joy = Console.ReadKey();
+
                 int ii = 0;
 
-                if (joy.KeyChar == 'a')
+                if (iterations > 1000)
                 {
-                    ii = -1;
-                }
-                if (joy.KeyChar == 'd')
-                {
-                    ii = 1;
-                }
-                if (joy.KeyChar == ' ')
-                {
-                    ii = 0;
+                    var joy = Console.ReadKey();
+
+
+                    if (joy.KeyChar == 'a')
+                    {
+                        ii = -1;
+                    }
+                    if (joy.KeyChar == 'd')
+                    {
+                        ii = 1;
+                    }
+                    if (joy.KeyChar == ' ')
+                    {
+                        ii = 0;
+                    }
                 }
 
                 cpu.Run(new long[1] { (long)ii });
@@ -68,38 +76,54 @@ namespace Day13._1
                     grid[x, y] = c;
                 }
 
-
-                for (int i = 0; i < SIZE; i++)
+                if (iterations > 1000)
                 {
-                    for (int j = 0; j < SIZE; j++)
+                    Console.Clear();
+                    for (int i = 0; i < SIZE; i++)
                     {
-                        Console.WriteLine(grid[i, j]);
+                        for (int j = 0; j < SIZE; j++)
+                        {
+                            //Console.Write(grid[i, j]);
 
-                        //switch (grid[i,j])
-                        //{
-                        //    case 0:
-                        //        Console.Write(" ");
-                        //        b.SetPixel(j, i, Color.Transparent);
-                        //        break;
+                            switch (grid[i, j])
+                            {
+                                case 0:
+                                    Console.Write(" ");
+                                    //b.SetPixel(j, i, Color.White);
+                                    break;
 
-                        //    case 1:
-                        //        Console.Write("o");
-                        //        b.SetPixel(j, i, Color.Black);
-                        //        break;
-                        //    case 2:
-                        //        Console.Write(".");
-                        //        b.SetPixel(j, i, Color.White);
-                        //        break;
+                                case 1:
+                                    Console.Write("I");
+                                    //b.SetPixel(j, i, Color.White);
+                                    break;
+                                case 2:
+                                    Console.Write("X");
+                                    //b.SetPixel(j, i, Color.White);
+                                    break;
+                                case 3:
+                                    Console.Write("-");
+                                    //b.SetPixel(j, i, Color.White);
+                                    break;
+                                case 4:
+                                    Console.Write("o");
+                                    //b.SetPixel(j, i, Color.White);
+                                    break;
 
-                        //    default:
-                        //        break;
-                        //}
+                                default:
+                                    break;
+                            }
 
 
+                        }
+                        Console.WriteLine();
+                        
                     }
+
+                    Console.WriteLine(score);
                 }
 
-                Console.WriteLine(score);
+                iterations++;
+
             }
 
 
