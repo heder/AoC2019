@@ -7,7 +7,8 @@ namespace Intcode
         INIT = 0,
         RUNNING = 1,
         OUTPUT_READY = 2,
-        STOPPED = 3
+        STOPPED = 3,
+        WAITING_FOR_INPUT = 4
     }
 
     public class CPU
@@ -19,6 +20,18 @@ namespace Intcode
         private long pc { get; set; }
         private long relativeBase = 0;
 
+        private long[] _input;
+        private long inputPos = 0;
+
+        public long[] input
+        { 
+            set
+            {
+                _input = value;
+                inputPos = 0;
+            }
+        }
+
         public CPU(long[] ram_in)
         {
             ram_in.CopyTo(ram, 0);
@@ -26,8 +39,10 @@ namespace Intcode
             this.State = CpuState.INIT;
         }
 
-        public void Run(long[] input)
+        public void Run()
         {
+            //this.input = i;
+
             this.State = CpuState.RUNNING;
 
             long opcode = 0;
@@ -38,7 +53,7 @@ namespace Intcode
             long p2addr = 0;
             long p3addr = 0;
 
-            long inputPos = 0;
+            
 
             while (this.State == CpuState.RUNNING)
             {
@@ -111,7 +126,7 @@ namespace Intcode
 
                     case 3: // INP
                         //Console.WriteLine($"Input at pc {pc}:{input[inputPos]}");
-                        ram[p1addr] = input[inputPos];
+                        ram[p1addr] = _input[inputPos];
                         inputPos++;
                         pc += 2;
                         break;
