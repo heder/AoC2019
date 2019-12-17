@@ -1,0 +1,275 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Day14._2
+{
+    class Program
+    {
+
+        class Recipe
+        {
+            public Chemical Destination { get; set; }
+
+            public List<Chemical> Sources = new List<Chemical>();
+        }
+
+        class Chemical
+        {
+            public string Name { get; set; }
+            public int Amount { get; set; }
+        }
+
+
+        class OreSource
+        {
+            public string Name { get; set; }
+            public int Amount { get; set; }
+            public int OreAmount { get; set; }
+            public int Need { get; set; }
+        }
+
+
+        static List<OreSource> oreSources = new List<OreSource>();
+        static List<Recipe> recipeRows = new List<Recipe>();
+        static Dictionary<string, int> stock = new Dictionary<string, int>();
+
+        static void Main(string[] args)
+        {
+            string[] input = File.ReadAllLines("in.txt");
+
+            foreach (var item in input)
+            {
+                string[] s1 = item.Split("=>");
+                string[] sources = s1[0].Trim().Split(',');
+
+                if (sources.Length == 1)
+                {
+                    string[] s = sources[0].Trim().Split(' ');
+                    string[] destination = s1[1].Trim().Split(' ');
+
+                    if (s[1] == "ORE")
+                    {
+                        oreSources.Add(new OreSource() { Name = destination[1], Amount = Convert.ToInt32(destination[0]), OreAmount = Convert.ToInt32(s[0]), Need = 0, });
+                    }
+                }
+            }
+
+
+            foreach (var item in input)
+            {
+                string[] s1 = item.Split("=>");
+
+                if (s1[0].Contains(" ORE ") == false)
+                {
+                    Recipe r = new Recipe();
+
+                    string[] dest = s1[1].Trim().Split(' ');
+
+                    Chemical c = new Chemical();
+                    c.Name = dest[1];
+                    c.Amount = Convert.ToInt32(dest[0]);
+                    r.Destination = c;
+
+                    string[] sources = s1[0].Split(",");
+
+                    foreach (var item2 in sources)
+                    {
+                        string[] dest2 = item2.Trim().Split(' ');
+
+                        Chemical c2 = new Chemical();
+                        c2.Name = dest2[1];
+                        c2.Amount = Convert.ToInt32(dest2[0]);
+                        r.Sources.Add(c2);
+                    }
+
+                    recipeRows.Add(r);
+                }
+            }
+
+            long oreStock = 1000000000000;
+            long iterations = 0;
+            Recipe fuel = recipeRows.First(f => f.Destination.Name == "FUEL");
+
+            while (true)
+            {
+                foreach (var item in oreSources)
+                {
+                    item.Need = 0;
+                }
+
+                TrackNeed(fuel, 1);
+                int totalOreNeed = 0;
+
+                // Aggregate ore need
+                foreach (var item in oreSources)
+                {
+                    int rem;
+                    int q = Math.DivRem(item.Need, item.Amount, out rem);
+
+                    if (rem == 0)
+                    {
+                        // No chemical stock
+                        totalOreNeed += item.OreAmount * q;
+                    }
+                    else
+                    {
+                        int produced = (q + 1) * item.Amount;
+                        int extra = produced - item.Need;
+
+                        if (stock.ContainsKey(item.Name))
+                        {
+                            stock[item.Name] += extra;
+                        }
+                        else
+                        {
+                            stock.Add(item.Name, extra);
+                        }
+
+                        totalOreNeed += item.OreAmount * (q + 1);
+                    }  
+                }
+
+                iterations++;
+                if (oreStock < totalOreNeed)
+                {
+                    Console.WriteLine(iterations);
+                    Console.ReadKey();
+                }
+
+                oreStock -= totalOreNeed;
+
+                if (iterations % 10000 == 0)
+                {
+                    Console.WriteLine(oreStock);
+                }
+            }
+        }
+
+
+
+
+
+        static void TrackNeed(Recipe r, int amount)
+        {
+            //Console.WriteLine($"Need to produce {r.Destination.Amount * amount} {r.Destination.Name} ({amount} lines)");
+
+            foreach (var item in r.Sources)
+            {
+                //Console.WriteLine($"Handling source {item.Name} with need {item.Amount}");
+
+                var oreSource = oreSources.FirstOrDefault(f => f.Name == item.Name);
+                if (oreSource != null)
+                {
+                    //Console.WriteLine($"Source {oreSource.Name} is generated by ORE. Amount Needed: {item.Amount * amount}");
+
+                    // Is ore generated
+                    int needed = item.Amount * amount;
+
+                    if (stock.ContainsKey(item.Name))
+                    {
+                        if (stock[item.Name] > 0)
+                        {
+                            //Console.WriteLine($"{stock[item.Name]} {item.Name} in stock");
+
+                            if (stock[item.Name] == needed)
+                            {
+                                needed = 0;
+                                stock[item.Name] = 0;
+                            }
+                            else if (stock[item.Name] > needed)
+                            {
+                                stock[item.Name] -= needed;
+                                needed = 0;
+
+                            }
+                            else if (stock[item.Name] < needed)
+                            {
+                                needed -= stock[item.Name];
+                                stock[item.Name] = 0;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        stock.Add(item.Name, 0);
+                        //Console.WriteLine($"No {item.Name} in stock");
+                    }
+
+                    oreSource.Need += needed;
+                }
+                else
+                {
+                    //Console.WriteLine($"Source {item.Name} is generated by other chemicals.");
+
+                    // Find recipe row
+                    Recipe recipe = recipeRows.First(f => f.Destination.Name == item.Name);
+
+                    int needed = item.Amount * amount;
+                    //Console.WriteLine($"We need {weNeed} {item.Name}");
+
+                    if (stock.ContainsKey(item.Name))
+                    {
+                        if (stock[item.Name] > 0)
+                        {
+                            //Console.WriteLine($"{stock[item.Name]} {item.Name} in stock");
+
+                            if (stock[item.Name] == needed)
+                            {
+                                needed = 0;
+                                stock[item.Name] = 0;
+                            }
+                            else if (stock[item.Name] > needed)
+                            {
+                                stock[item.Name] -= needed;
+                                needed = 0;
+
+                            }
+                            else if (stock[item.Name] < needed)
+                            {
+                                needed -= stock[item.Name];
+                                stock[item.Name] = 0;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        stock.Add(item.Name, 0);
+                        //Console.WriteLine($"No {item.Name} in stock");
+                    }
+
+                    int outputQuanta = recipe.Destination.Amount;
+                    int q = Math.DivRem(needed, outputQuanta, out int rem);
+                    int lines;
+
+                    if (rem == 0)
+                    {
+                        lines = q;
+                        //Console.WriteLine($"We need to produce {lines} lines of {item.Name}");
+                    }
+                    else
+                    {
+                        lines = q + 1;
+                        //Console.WriteLine($"We need to produce {lines} lines of {item.Name}");
+
+                        int extra = ((lines * recipe.Destination.Amount) - needed);
+
+                        //Console.WriteLine($"Produce {(lines * recipe.Destination.Amount)} {item.Name}, needing {weNeed}. Putting {extra} in stock");
+
+                        if (stock.ContainsKey(item.Name))
+                        {
+                            stock[item.Name] += extra;
+                        }
+                        else
+                        {
+                            stock.Add(item.Name, extra);
+                        }
+                    }
+
+                    TrackNeed(recipe, lines);
+                }
+            }
+        }
+    }
+}
