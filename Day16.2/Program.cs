@@ -18,73 +18,26 @@ namespace Day16._1
                 input1.CopyTo(input, i * input1.Length);
             }
 
+            int[] data = new int[input.Length - offset];
 
+            // Throw away data before offset
+            for (int i = 0; i < data.Length; ++i)
+            {
+                data[i] = input[offset + i];
+            }
 
-
-
-
+            // Multiply pattern is statically 1 in leftover array
+            for (int p = 0; p < 100; p++)
+            {
+                for (int i = data.Length - 2; i >= 0; i--)
+                {
+                    data[i] = (data[i] + data[i + 1]) % 10;
+                }
+            }
 
             int[] result = new int[input.Length];
-
-            for (int i = 0; i < PHASES; i++)
-            {
-                Console.WriteLine($"Phase {i}");
-
-                // Row in phase
-                for (int j = 0; j < input.Length; j++)
-                {
-                    if (j % 1000 == 0)
-                    {
-                        Console.WriteLine($"Phase: {i} Phaserow {j}");
-                    }
-
-                    // Generate pattern
-                    // Construct pattern
-                    patternIterator = 0;
-                    currentDigit = -1;
-
-                    for (int p = 0; p < patternIterator + 1; p++)
-                    {
-                        if (patternIterator == input.Length + 1)
-                        {
-                            break;
-                        }
-
-                        // Take pattern digit p2 times
-                        int d = GetNextPatternDigit();
-                        for (int p2 = 0; p2 < i + 1; p2++)
-                        {
-                            if (patternIterator == input.Length + 1)
-                            {
-                                break;
-                            }
-                            pattern[patternIterator] = d;
-                            patternIterator++;
-                        }
-                    }
-
-                    //int aggregate = 0;
-                    //for (int k = 0; k < input.Length; k++)
-                    //{
-                    //    // Multiplications
-                    //    aggregate += input[k] * pattern[k + 1];
-
-                    //}
-                    //result[j] += Math.Abs(aggregate % 10);
-                }
-
-                result.CopyTo(input, 0);
-            }
-
-
-            for (int i = offset; i < 8; i++)
-            {
-                Console.Write(input[i]);
-            }
-
-
-            Console.ReadKey();
         }
+
 
         public static int[] basePattern = new int[4] { 0, 1, 0, -1 };
         public static int currentDigit = -1;
