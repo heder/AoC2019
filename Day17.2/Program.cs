@@ -44,7 +44,7 @@ namespace Day17._2
                         var command = ASCIIEncoding.ASCII.GetBytes(Console.ReadLine() + '\n');
 
                         var i = command.Select(f => (long)f).ToArray();
-                        cpu.input = i;
+                        cpu.Input = i;
 
                         x = 0;
                         y = 0;

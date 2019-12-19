@@ -17,13 +17,13 @@ namespace Intcode
         public CpuState State { get; set; }
 
         private long[] ram = new long[20000];
-        private long pc { get; set; }
+        public long pc { get; set; }
         private long relativeBase = 0;
 
         private long[] _input;
         private long inputPos = 0;
 
-        public long[] input
+        public long[] Input
         { 
             set
             {
