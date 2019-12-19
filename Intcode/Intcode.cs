@@ -41,8 +41,6 @@ namespace Intcode
 
         public void Run()
         {
-            //this.input = i;
-
             this.State = CpuState.RUNNING;
 
             long opcode = 0;
@@ -52,12 +50,12 @@ namespace Intcode
             long p1addr = 0;
             long p2addr = 0;
             long p3addr = 0;
-
+            string instruction = "";
             
 
             while (this.State == CpuState.RUNNING)
             {
-                string instruction = ram[pc].ToString().PadLeft(5, '0');
+                instruction = ram[pc].ToString().PadLeft(5, '0');
 
                 opcode = Convert.ToInt64(instruction.Substring(3, 2));
                 p1mode = Convert.ToInt64(instruction.Substring(2, 1));
