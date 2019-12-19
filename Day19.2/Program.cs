@@ -21,7 +21,7 @@ namespace Day19._2
         {
             long[] input = File.ReadAllLines("in.txt")[0].Split(',').Select(f => Convert.ToInt64(f)).ToArray();
 
-            const int SIZE = 500;
+            const int SIZE = 1000;
 
             int[,] grid = new int[SIZE, SIZE];
             int output = 0;
@@ -66,14 +66,14 @@ namespace Day19._2
 
             bm.Save("output.png", System.Drawing.Imaging.ImageFormat.Png);
 
-            // Find rightmost "1" pixel
-            for (int x = SIZE - 1; x > 0; x--)
-            {
-                for (int y = 0; y < length; y++)
-                {
+            //// Find rightmost "1" pixel
+            //for (int x = SIZE - 1; x > 0; x--)
+            //{
+            //    for (int y = 0; y < length; y++)
+            //    {
 
-                }
-            }
+            //    }
+            //}
 
 
 
