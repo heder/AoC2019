@@ -16,7 +16,7 @@ namespace Intcode
         public long Output { get; set; }
         public CpuState State { get; set; }
 
-        private long[] ram = new long[20000];
+        private long[] ram = new long[5000];
         public long pc { get; set; }
         private long relativeBase = 0;
 
@@ -39,6 +39,7 @@ namespace Intcode
             this.State = CpuState.INIT;
         }
 
+
         public void Run()
         {
             this.State = CpuState.RUNNING;
@@ -50,17 +51,22 @@ namespace Intcode
             long p1addr = 0;
             long p2addr = 0;
             long p3addr = 0;
-            string instruction = "";
-            
+            //string instruction = "";
+
 
             while (this.State == CpuState.RUNNING)
             {
-                instruction = ram[pc].ToString().PadLeft(5, '0');
+                //instruction = ram[pc].ToString().PadLeft(5, '0');
 
-                opcode = Convert.ToInt64(instruction.Substring(3, 2));
-                p1mode = Convert.ToInt64(instruction.Substring(2, 1));
-                p2mode = Convert.ToInt64(instruction.Substring(1, 1));
-                p3mode = Convert.ToInt64(instruction.Substring(0, 1));
+                //opcode = Convert.ToInt64(instruction.Substring(3, 2));
+                //p1mode = Convert.ToInt64(instruction.Substring(2, 1));
+                //p2mode = Convert.ToInt64(instruction.Substring(1, 1));
+                //p3mode = Convert.ToInt64(instruction.Substring(0, 1));
+
+                opcode = ram[pc] % 100; // Convert.ToInt64(instruction.Substring(3, 2));
+                p1mode = ram[pc] / 100 % 10; // Convert.ToInt64(instruction.Substring(2, 1));
+                p2mode = ram[pc] / 1000 % 10; // Convert.ToInt64(instruction.Substring(1, 1));
+                p3mode = ram[pc] / 10000 % 10; // Convert.ToInt64(instruction.Substring(0, 1));
 
                 switch (p1mode)
                 {
@@ -193,7 +199,7 @@ namespace Intcode
                         break;
 
                     default:
-                        Console.WriteLine($"Invalid instruction {instruction} at pc {pc}");
+                        Console.WriteLine($"Invalid instruction {ram[pc]} at pc {pc}");
                         Console.ReadKey();
                         break;
                 }

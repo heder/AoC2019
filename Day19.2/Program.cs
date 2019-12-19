@@ -82,7 +82,7 @@ namespace Day19._2
 
                     if (grid[a.x, a.y] == 1 && grid[b.x, b.y] == 1 && grid[c.x, c.y] == 1 && grid[d.x, d.y] == 1)
                     {
-                        Console.WriteLine($"Ship fits @ {a.x},{a.y}");
+                        //Console.WriteLine($"Ship fits @ {a.x},{a.y}");
                         if (a.x < lowx) { lowx = a.x; lowy = a.y; }
                     }
                 }
