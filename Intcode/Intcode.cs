@@ -15,11 +15,9 @@ namespace Intcode
     {
         public long Output { get; set; }
         public CpuState State { get; set; }
-
         private long[] ram = new long[5000];
         public long pc { get; set; }
         private long relativeBase = 0;
-
         private long[] _input;
         private long inputPos = 0;
 
@@ -35,38 +33,29 @@ namespace Intcode
         public CPU(long[] ram_in)
         {
             ram_in.CopyTo(ram, 0);
-            this.pc = 0;
-            this.State = CpuState.INIT;
+            pc = 0;
+            State = CpuState.INIT;
         }
 
 
         public void Run()
         {
-            this.State = CpuState.RUNNING;
+            State = CpuState.RUNNING;
 
-            long opcode = 0;
-            long p1mode = 0;
-            long p2mode = 0;
-            long p3mode = 0;
+            long opcode;
+            long p1mode;
+            long p2mode;
+            long p3mode;
             long p1addr = 0;
             long p2addr = 0;
             long p3addr = 0;
-            //string instruction = "";
 
-
-            while (this.State == CpuState.RUNNING)
+            while (State == CpuState.RUNNING)
             {
-                //instruction = ram[pc].ToString().PadLeft(5, '0');
-
-                //opcode = Convert.ToInt64(instruction.Substring(3, 2));
-                //p1mode = Convert.ToInt64(instruction.Substring(2, 1));
-                //p2mode = Convert.ToInt64(instruction.Substring(1, 1));
-                //p3mode = Convert.ToInt64(instruction.Substring(0, 1));
-
-                opcode = ram[pc] % 100; // Convert.ToInt64(instruction.Substring(3, 2));
-                p1mode = ram[pc] / 100 % 10; // Convert.ToInt64(instruction.Substring(2, 1));
-                p2mode = ram[pc] / 1000 % 10; // Convert.ToInt64(instruction.Substring(1, 1));
-                p3mode = ram[pc] / 10000 % 10; // Convert.ToInt64(instruction.Substring(0, 1));
+                opcode = ram[pc] % 100;
+                p1mode = ram[pc] / 100 % 10;
+                p2mode = ram[pc] / 1000 % 10;
+                p3mode = ram[pc] / 10000 % 10;
 
                 switch (p1mode)
                 {
@@ -137,8 +126,8 @@ namespace Intcode
 
                     case 4: // OUT
                         //Console.WriteLine($"Output at pc {pc}:{ram[p1addr]}");
-                        this.Output = ram[p1addr];
-                        this.State = CpuState.OUTPUT_READY;
+                        Output = ram[p1addr];
+                        State = CpuState.OUTPUT_READY;
                         pc += 2;
                         break;
 
@@ -195,7 +184,7 @@ namespace Intcode
                         break;
 
                     case 99:
-                        this.State = CpuState.STOPPED;
+                        State = CpuState.STOPPED;
                         break;
 
                     default:
