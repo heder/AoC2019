@@ -41,7 +41,8 @@ namespace Day11._1
                 var currentColor = grid[currentX, currentY].Color;
 
                 // Input to Intcode
-                cpu.Run(new long[1] { currentColor });
+                cpu.Input = new long[1] { currentColor };
+                cpu.Run();
 
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {
@@ -50,7 +51,8 @@ namespace Day11._1
                     grid[currentX, currentY].Painted = true;
                 }
 
-                cpu.Run(new long[0]);
+                cpu.Input = new long[0];
+                cpu.Run();
 
                 // Output is turn
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)

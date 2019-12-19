@@ -22,19 +22,22 @@ namespace Day13._1
                 int y = 0;
                 int c = 0;
 
-                cpu.Run(new long[] { });
+                cpu.Input = new long[] { };
+                cpu.Run();
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {
                     x = (int)cpu.Output;
                 }
 
-                cpu.Run(new long[] { });
+                cpu.Input = new long[] { };
+                cpu.Run();
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {
                     y = (int)cpu.Output;
                 }
 
-                cpu.Run(new long[] { });
+                cpu.Input = new long[] { };
+                cpu.Run();
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {
                     c = (int)cpu.Output;

@@ -66,19 +66,22 @@ namespace Day13._1
                 }
 
 
-                cpu.Run(new long[1] { (long)ii });
+                cpu.Input = new long[1] { (long)ii };
+                cpu.Run();
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {
                     x = (int)cpu.Output;
                 }
 
-                cpu.Run(new long[1] { (long)ii });
+                cpu.Input = new long[1] { (long)ii };
+                cpu.Run();
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {
                     y = (int)cpu.Output;
                 }
 
-                cpu.Run(new long[1] { (long)ii });
+                cpu.Input = new long[1] { (long)ii };
+                cpu.Run();
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {
                     c = (int)cpu.Output;

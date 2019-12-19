@@ -103,7 +103,8 @@ namespace Day15._1
                 {
                     while (toVisit.Count == 0)
                     {
-                        cpu.Run(new long[] { Convert.ToInt64(GetCurrentTile().DirectionBack) });
+                        cpu.Input = new long[] { Convert.ToInt64(GetCurrentTile().DirectionBack) };
+                        cpu.Run();
                         if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                         {
                             var output = (int)cpu.Output; // Should always be 1
@@ -129,7 +130,8 @@ namespace Day15._1
                 foreach (var direction in toVisit)
                 {
                     int output = -1;
-                    cpu.Run(new long[] { Convert.ToInt64(direction) });
+                    cpu.Input = new long[] { Convert.ToInt64(direction) };
+                    cpu.Run();
                     if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                     {
                         output = (int)cpu.Output;

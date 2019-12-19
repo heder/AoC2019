@@ -21,7 +21,9 @@ namespace Day9._2
 
             Int64[] inArray = new Int64[1];
             inArray[0] = inp;
-            cpu.Run(inArray);
+
+            cpu.Input = inArray;
+            cpu.Run();
 
             if (cpu.State == Intcode.CpuState.OUTPUT_READY)
             {

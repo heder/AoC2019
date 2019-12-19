@@ -41,8 +41,8 @@ namespace Day17._2
                         var i = command.Select(f => (long)f).ToArray();
                         cpu.Input = i;
 
-                        x = 0;
-                        y = 0;
+                        //x = 0;
+                        //y = 0;
 
                         break;
 

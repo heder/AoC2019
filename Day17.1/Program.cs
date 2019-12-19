@@ -23,7 +23,7 @@ namespace Day17._1
 
             while (cpu.State != Intcode.CpuState.STOPPED)
             {
-                cpu.input = new long[] { 1 };
+                cpu.Input = new long[] { 1 };
                 cpu.Run();
                 if (cpu.State == Intcode.CpuState.OUTPUT_READY)
                 {

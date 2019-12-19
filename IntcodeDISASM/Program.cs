@@ -26,9 +26,9 @@ namespace IntcodeDISASM
                 System.Int64 p1mode;
                 System.Int64 p2mode;
                 System.Int64 p3mode;
-                System.Int64 p1val;
-                System.Int64 p2val;
-                System.Int64 p3val;
+                //System.Int64 p1val;
+                //System.Int64 p2val;
+                //System.Int64 p3val;
 
                 string p1mnemo = "";
                 string p2mnemo = "";
