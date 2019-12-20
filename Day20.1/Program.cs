@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Day20._1
 {
-
     public enum TileType
     {
         START_POS = 0,
@@ -53,7 +53,7 @@ namespace Day20._1
         public static Tile[,] grid;
         public static Coordinate CurrentLocation;
 
-        public static Coordinate sensor;
+        //public static Coordinate sensor;
 
         static void Main(string[] args)
         {
@@ -160,8 +160,6 @@ namespace Day20._1
                     }
                 }
 
-                iterations++;
-
                 Visualise(false);
             }
         }
@@ -169,19 +167,19 @@ namespace Day20._1
         private static List<Direction> GetNotVisitedNeighBours()
         {
             var ret = new List<Direction>();
-            if (GetTileInDirection(Direction.N).Visited == false)
+            if (GetTileInDirection(Direction.N).Visited == false || GetTileInDirection(Direction.N).DistanceFromOrigin > GetCurrentTile().DistanceFromOrigin + 1)
             {
                 ret.Add(Direction.N);
             }
-            if (GetTileInDirection(Direction.S).Visited == false)
+            if (GetTileInDirection(Direction.S).Visited == false || GetTileInDirection(Direction.S).DistanceFromOrigin > GetCurrentTile().DistanceFromOrigin + 1)
             {
                 ret.Add(Direction.S);
             }
-            if (GetTileInDirection(Direction.W).Visited == false)
+            if (GetTileInDirection(Direction.W).Visited == false || GetTileInDirection(Direction.W).DistanceFromOrigin > GetCurrentTile().DistanceFromOrigin + 1)
             {
                 ret.Add(Direction.W);
             }
-            if (GetTileInDirection(Direction.E).Visited == false)
+            if (GetTileInDirection(Direction.E).Visited == false || GetTileInDirection(Direction.E).DistanceFromOrigin > GetCurrentTile().DistanceFromOrigin + 1)
             {
                 ret.Add(Direction.E);
             }
@@ -294,8 +292,5 @@ namespace Day20._1
                 Console.WriteLine();
             }
         }
-
-
-
     }
 }
