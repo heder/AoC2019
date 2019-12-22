@@ -63,8 +63,6 @@ namespace Day20._1
         public static Tile[,] grid;
         public static Coordinate CurrentLocation;
 
-        //public static Coordinate sensor;
-
         static void Main(string[] args)
         {
             string[] input = File.ReadAllLines("in.txt");
