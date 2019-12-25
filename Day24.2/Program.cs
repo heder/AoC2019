@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Day24._1
+namespace Day24._2
 {
 
     public struct Coordinate
@@ -18,7 +18,7 @@ namespace Day24._1
     {
         static int XSIZE = 5;
         static int YSIZE = 5;
-        static int LEVELS = 100;
+        static int LEVELS = 500;
 
         static bool[,,] grid = new bool[XSIZE, YSIZE, LEVELS];
         static bool[,,] grid2 = new bool[XSIZE, YSIZE, LEVELS];
@@ -27,60 +27,82 @@ namespace Day24._1
         {
             string[] input = File.ReadAllLines("in.txt");
 
-            HashSet<long> signatures = new HashSet<long>();
-
             for (int y = 0; y < YSIZE; y++)
             {
                 for (int x = 0; x < XSIZE; x++)
                 {
-                    grid[x, y, 50] = (input[y][x] == '#') ? true : false;
+                    grid[x, y, 250] = (input[y][x] == '#') ? true : false;
                 }
             };
 
             Visualize();
+
+            int iterations = 0;
 
             while (true)
             {
                 int factor = 1;
                 int signature = 0;
 
-                for (int y = 0; y < YSIZE; y++)
+                for (int l = 1; l < LEVELS - 1; l++)
+                {
+
+                    for (int y = 0; y < YSIZE; y++)
+                    {
+                        for (int x = 0; x < XSIZE; x++)
+                        {
+                            if (!(x == 2 && y == 2)) // Skip middle tile
+                            {
+                                if (grid[x, y, l] == true)
+                                {
+                                    signature += factor;
+                                }
+
+                                var surrcnt = GetSurroundingBugs(x, y, l);
+
+                                if (grid[x, y, l] == true && surrcnt != 1) grid2[x, y, l] = false;
+                                else if (grid[x, y, l] == false && (surrcnt == 1 || surrcnt == 2)) grid2[x, y, l] = true;
+                                else grid2[x, y, l] = grid[x, y, l];
+
+                                factor *= 2;
+                            }
+                        }
+                    }
+                }
+
+                iterations++;
+
+
+                for (int l = 0; l < LEVELS; l++)
                 {
                     for (int x = 0; x < XSIZE; x++)
                     {
-                        if (grid[x, y] == true)
+                        for (int y = 0; y < YSIZE; y++)
                         {
-                            signature += factor;
+                            grid[x, y, l] = grid2[x, y, l];
                         }
-
-                        var surrcnt = GetSurroundingBugs(x, y);
-
-                        if (grid[x, y] == true && surrcnt != 1) grid2[x, y] = false;
-                        else if (grid[x, y] == false && (surrcnt == 1 || surrcnt == 2)) grid2[x, y] = true;
-                        else grid2[x, y] = grid[x, y];
-
-                        factor *= 2;
                     }
                 }
 
-                Visualize();
-
-                if (signatures.Contains(signature))
+                if (iterations == 200)
                 {
-                    Console.WriteLine(signature);
-                    Console.ReadKey();
-                }
-
-                signatures.Add(signature);
-
-
-                // Copy grid2 to grid1
-                for (int x = 0; x < XSIZE; x++)
-                {
-                    for (int y = 0; y < YSIZE; y++)
+                    int agg = 0;
+                    for (int l = 0; l < LEVELS; l++)
                     {
-                        grid[x, y] = grid2[x, y];
+                        for (int x = 0; x < XSIZE; x++)
+                        {
+                            for (int y = 0; y < YSIZE; y++)
+                            {
+                                if (grid[x, y, l] == true)
+                                {
+                                    agg++;
+                                }
+                            }
+                        }
                     }
+
+                    Console.WriteLine(agg);
+                    Console.ReadKey();
                 }
             }
         }
@@ -104,7 +126,6 @@ namespace Day24._1
                     if (any == true)
                         break;
                 }
-
 
                 if (any == true)
                 {
@@ -137,13 +158,12 @@ namespace Day24._1
 
         }
 
+
+        // Fulhack Deluxe!
         private static int GetSurroundingBugs(int x, int y, int l)
         {
-            List<bool> ret = new List<bool>();
-
             List<Coordinate> tocheck = new List<Coordinate>();
-
-
+            
             // #....
             // .....
             // .....
@@ -183,7 +203,7 @@ namespace Day24._1
             // .....
 
             // Upper row, right corner
-            if (x == 0 && y == 0)
+            if (x == 4 && y == 0)
             {
                 tocheck.Add(new Coordinate() { X = x, Y = y + 1, Z = l }); // Same tile, below
                 tocheck.Add(new Coordinate() { X = x - 1, Y = y, Z = l }); // Same tile, left
@@ -237,11 +257,11 @@ namespace Day24._1
                 tocheck.Add(new Coordinate() { X = x - 1, Y = y, Z = l }); // Same tile, left
 
                 // Inner tile, below
-                tocheck.Add(new Coordinate() { X = 0, Y = 0, Z = l + 1 }); 
-                tocheck.Add(new Coordinate() { X = 1, Y = 0, Z = l + 1 }); 
-                tocheck.Add(new Coordinate() { X = 2, Y = 0, Z = l + 1 }); 
-                tocheck.Add(new Coordinate() { X = 3, Y = 0, Z = l + 1 }); 
-                tocheck.Add(new Coordinate() { X = 4, Y = 0, Z = l + 1 }); 
+                tocheck.Add(new Coordinate() { X = 0, Y = 0, Z = l + 1 });
+                tocheck.Add(new Coordinate() { X = 1, Y = 0, Z = l + 1 });
+                tocheck.Add(new Coordinate() { X = 2, Y = 0, Z = l + 1 });
+                tocheck.Add(new Coordinate() { X = 3, Y = 0, Z = l + 1 });
+                tocheck.Add(new Coordinate() { X = 4, Y = 0, Z = l + 1 });
             }
 
             // .....
@@ -267,7 +287,7 @@ namespace Day24._1
             // .....
 
             // Row 3, Tile 2
-            if (y == 2  && x == 1)
+            if (y == 2 && x == 1)
             {
                 tocheck.Add(new Coordinate() { X = x, Y = y + 1, Z = l }); // Same tile, below
                 tocheck.Add(new Coordinate() { X = x, Y = y - 1, Z = l }); // Same tile, above
@@ -294,7 +314,7 @@ namespace Day24._1
                 tocheck.Add(new Coordinate() { X = x, Y = y - 1, Z = l }); // Same tile, above
                 tocheck.Add(new Coordinate() { X = x + 1, Y = y, Z = l }); // Same tile, right
 
-                // Inner tile, right
+                // Inner tile, left
                 tocheck.Add(new Coordinate() { X = 4, Y = 0, Z = l + 1 });
                 tocheck.Add(new Coordinate() { X = 4, Y = 1, Z = l + 1 });
                 tocheck.Add(new Coordinate() { X = 4, Y = 2, Z = l + 1 });
@@ -315,7 +335,7 @@ namespace Day24._1
                 tocheck.Add(new Coordinate() { X = x - 1, Y = y, Z = l }); // Same tile, left
                 tocheck.Add(new Coordinate() { X = x + 1, Y = y, Z = l }); // Same tile, right
 
-                // Inner tile, right
+                // Inner tile, above
                 tocheck.Add(new Coordinate() { X = 0, Y = 4, Z = l + 1 });
                 tocheck.Add(new Coordinate() { X = 1, Y = 4, Z = l + 1 });
                 tocheck.Add(new Coordinate() { X = 2, Y = 4, Z = l + 1 });
@@ -363,27 +383,17 @@ namespace Day24._1
             // .....
             // ....#
 
-
             // Bottom row, right corner
             if (x == 4 && y == 4)
             {
                 tocheck.Add(new Coordinate() { X = x - 1, Y = y, Z = l }); // Same tile, left
                 tocheck.Add(new Coordinate() { X = x, Y = y - 1, Z = l }); // Same tile, above
 
-                tocheck.Add(new Coordinate() { X = 3, Y = 3, Z = l - 1 }); // Outer tile, below 
+                tocheck.Add(new Coordinate() { X = 2, Y = 3, Z = l - 1 }); // Outer tile, below 
                 tocheck.Add(new Coordinate() { X = 3, Y = 2, Z = l - 1 }); // Outer tile, right x = 1, y = 2
             }
 
-
-
-            //var validcoords = tocheck.Where(f => f.X >= 0 && f.X <= XSIZE - 1 && f.Y >= 0 && f.Y <= YSIZE - 1);
-
-            foreach (var item in validcoords)
-            {
-                if (grid[item.X, item.Y] == true) ret.Add(grid[item.X, item.Y]);
-            }
-
-            return ret.Count;
+            return tocheck.Count(f => grid[f.X, f.Y, f.Z] == true);
         }
     }
 }
