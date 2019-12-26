@@ -70,14 +70,14 @@ namespace Day21._1
 // Part 2
 // (!A || !B || !C) && D && (E || H)
 // "Hoppa om det finns ett hål i A, B eller C, men endast om vi kan landa på D samt att vi tar oss vidare genom att gå eller hoppa.
-// NOT A T - Hål i A -> J
-// NOT B J - Hål i B -> T
+// NOT A T - Hål i A -> T
+// NOT B J - Hål i B -> J
 // OR T J - Hål i antingen T eller J
 // NOT C T - Hål i C -> T
-// OR T J - Hål i antingen T eller J
+// OR T J - Hål i antingen A, B eller C
 // AND D J - Vi kan landa på D
-// NOT H T - Ladda Hs inversstatus för direkthopp
+// NOT H T - Ladda H inverterade status för ev. direkthopp
 // NOT T T - Invertera H status i T (kolla om säker)
-// OR E T - Ladda E (gå vidare)
-// AND T J - Hål i antingen A,B,C + D säker samt at vi tar oss vidare.
+// OR E T - Ladda E (antingen H eller E är safe)
+// AND T J - Hål i (A,B,C) && D säker && (E || H säker)
 
