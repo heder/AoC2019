@@ -37,7 +37,7 @@ namespace Day21._1
                 }
 
                 if (output > 255)
-                {
+                { 
                     Console.ReadKey();
                 }
 
@@ -55,3 +55,29 @@ namespace Day21._1
         }
     }
 }
+
+// Part 1
+// (!A || !B || !C) && D
+// "Om det finns ett hål i antingen A, B, eller C och D är safe -> hoppa"
+
+// NOT A T  - Hål i A -> Hoppa
+// NOT B J  - Hål i B -> Temp
+// OR T J   - Hål i antingen T eller J -> Hoppa
+// NOT C T  - Hål i C -> Temp
+// OR T J   - Hål i T (C) eller J (A or B) -> Hoppa
+// AND D J  - D måste alltid vara safe
+
+// Part 2
+// (!A || !B || !C) && D && (E || H)
+// "Hoppa om det finns ett hål i A, B eller C, men endast om vi kan landa på D samt att vi tar oss vidare genom att gå eller hoppa.
+// NOT A T - Hål i A -> J
+// NOT B J - Hål i B -> T
+// OR T J - Hål i antingen T eller J
+// NOT C T - Hål i C -> T
+// OR T J - Hål i antingen T eller J
+// AND D J - Vi kan landa på D
+// NOT H T - Ladda Hs inversstatus för direkthopp
+// NOT T T - Invertera H status i T (kolla om säker)
+// OR E T - Ladda E (gå vidare)
+// AND T J - Hål i antingen A,B,C + D säker samt at vi tar oss vidare.
+
